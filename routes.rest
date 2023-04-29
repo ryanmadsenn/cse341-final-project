@@ -1,0 +1,11 @@
+GET http://localhost:8080/
+###
+GET http://localhost:8080/contacts/
+###
+GET http://localhost:8080/contacts/644d829f166fa90a09c9ff9d
+###
+GET https://cse-341-mhbj.onrender.com/
+###
+https://cse-341-mhbj.onrender.com/contacts/
+###
+https://cse-341-mhbj.onrender.com/contacts/644d829f166fa90a09c9ff9d
