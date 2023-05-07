@@ -6,6 +6,58 @@ GET http://localhost:8080/contacts/644d829f166fa90a09c9ff9d
 ###
 GET https://cse-341-mhbj.onrender.com/
 ###
-https://cse-341-mhbj.onrender.com/contacts/
+GET https://cse-341-mhbj.onrender.com/contacts/
 ###
-https://cse-341-mhbj.onrender.com/contacts/644d829f166fa90a09c9ff9d
+GET https://cse-341-mhbj.onrender.com/contacts/644d829f166fa90a09c9ff9d
+###
+POST http://localhost:8080/contacts/
+Content-Type: application/json
+
+{
+    "firstName": "Santa",
+    "lastName": "Claus",
+    "email": "santa@email.com",
+    "favoriteColor": "red",
+    "birthday": "3/5/260"
+}
+
+###
+PUT http://localhost:8080/contacts/6456a7784f28974abf096a99
+Content-Type: application/json
+
+{
+    "firstName": "Santa",
+    "lastName": "Claus",
+    "email": "stnick@email.com",
+    "favoriteColor": "red",
+    "birthday": "3/5/260"
+}
+
+###
+DELETE http://localhost:8080/contacts/6456a7784f28974abf096a99
+###
+POST https://cse-341-mhbj.onrender.com/contacts/
+Content-Type: application/json
+
+{
+    "firstName": "Santa",
+    "lastName": "Claus",
+    "email": "santa@email.com",
+    "favoriteColor": "red",
+    "birthday": "3/5/260"
+}
+
+###
+PUT https://cse-341-mhbj.onrender.com/contacts/6456a7784f28974abf096a99
+Content-Type: application/json
+
+{
+    "firstName": "Santa",
+    "lastName": "Claus",
+    "email": "stnick@email.com",
+    "favoriteColor": "red",
+    "birthday": "3/5/260"
+}
+
+###
+DELETE https://cse-341-mhbj.onrender.com/contacts/6456a7784f28974abf096a99
