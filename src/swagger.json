@@ -5,10 +5,10 @@
     "description": "A web service for CSE 341",
     "version": "1.0.0"
   },
-  "host": "https://cse-341-mhbj.onrender.com",
+  "host": "cse-341-mhbj.onrender.com",
   "basePath": "/",
   "schemes": [
-    "http"
+    "https"
   ],
   "paths": {
     "/contacts/": {
