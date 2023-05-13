@@ -8,6 +8,7 @@
   "host": "cse-341-mhbj.onrender.com",
   "basePath": "/",
   "schemes": [
+    "http",
     "https"
   ],
   "paths": {
