@@ -1,0 +1,127 @@
+interface BaseForm {
+  _id: ID
+  fname: String!
+  lname: String!
+  dob: String!
+  phone: String!
+  email: String!
+  addressLine1: String!
+  addressLine2: String
+  city: String!
+  state: String!
+  zip: Int!
+  coverageType: String!
+  coverageAmount: String!
+  beneficiary: String!
+}
+
+type InsuranceForm implements BaseForm {
+  _id: ID
+  fname: String!
+  lname: String!
+  dob: String!
+  phone: String!
+  email: String!
+  addressLine1: String!
+  addressLine2: String
+  city: String!
+  state: String!
+  zip: Int!
+  coverageType: String!
+  coverageAmount: String!
+  beneficiary: String!
+  healthRating: String!
+  medicalConditions: [String]!
+  tobaccoUse: Boolean!
+}
+
+type FinancialServiceForm implements BaseForm {
+  _id: ID
+  fname: String!
+  lname: String!
+  dob: String!
+  phone: String!
+  email: String!
+  addressLine1: String!
+  addressLine2: String
+  city: String!
+  state: String!
+  zip: Int!
+  coverageType: String!
+  coverageAmount: String!
+  beneficiary: String!
+  estimatedNetWorth: Int!
+  retirementDate: String!
+}
+
+type Agent {
+  _id: ID
+  fname: String!
+  lname: String!
+  description: String!
+}
+
+input InsuranceFormInput {
+  fname: String!
+  lname: String!
+  dob: String!
+  phone: String!
+  email: String!
+  addressLine1: String!
+  addressLine2: String
+  city: String!
+  state: String!
+  zip: Int!
+  coverageType: String!
+  coverageAmount: String!
+  beneficiary: String!
+  healthRating: String!
+  medicalConditions: [String]!
+  tobaccoUse: Boolean!
+}
+
+input FinancialServiceFormInput {
+  fname: String!
+  lname: String!
+  dob: String!
+  phone: String!
+  email: String!
+  addressLine1: String!
+  addressLine2: String
+  city: String!
+  state: String!
+  zip: Int!
+  coverageType: String!
+  coverageAmount: String!
+  beneficiary: String!
+  estimatedNetWorth: Int!
+  retirementDate: String!
+}
+
+input AgentInput {
+  fname: String!
+  lname: String!
+  description: String!
+}
+
+type InsertionResponse {
+  message: String!
+  id: ID!
+}
+
+type Query {
+  getInsuranceForms: [InsuranceForm]
+  getInsuranceForm(id: String!): InsuranceForm
+  getFinancialServiceForms: [FinancialServiceForm]
+  getFinancialServiceForm(id: String!): FinancialServiceForm
+  getAgents: [Agent]
+  getAgent(id: String!): Agent
+}
+
+type Mutation {
+  insertInsuranceForm(insuranceFormInput: InsuranceFormInput): InsertionResponse
+  insertFinancialServiceForm(
+    financialServiceFormInput: FinancialServiceFormInput
+  ): InsertionResponse
+  insertAgent(agentInput: AgentInput): InsertionResponse
+}

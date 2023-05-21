@@ -1,18 +1,29 @@
-import express from "express";
-import env from "dotenv";
-import bodyParser from "body-parser";
-import router from "./routes";
-env.config();
-const app = express();
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
+import { readFileSync } from "fs";
+import { resolvers } from "./resolvers.js";
+import { Db } from "mongodb";
+import { connectDB } from "./connect.js";
+const typeDefs = readFileSync("./schema.graphql", "utf-8");
+const db = await connectDB();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+export interface Context {
+  dataSources: {
+    db: Db;
+  };
+}
 
-app.use("/", router);
-
-const PORT = process.env.PORT;
-
-app.listen(PORT, () => {
-  /* eslint-disable no-console */
-  console.log(`🚀 Server is running on port ${PORT}`);
+const server = new ApolloServer<Context>({
+  typeDefs,
+  resolvers,
+  introspection: true,
 });
+
+const { url } = await startStandaloneServer(server, {
+  listen: { port: 4000 },
+  context: async () => {
+    return { dataSources: { db } };
+  },
+});
+// eslint-disable-next-line no-console
+console.log(`🚀 Server ready at ${url}`);
