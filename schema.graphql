@@ -80,6 +80,25 @@ input InsuranceFormInput {
   tobaccoUse: Boolean!
 }
 
+input InsuranceFormUpdateInput {
+  fname: String
+  lname: String
+  dob: String
+  phone: String
+  email: String
+  addressLine1: String
+  addressLine2: String
+  city: String
+  state: String
+  zip: Int
+  coverageType: String
+  coverageAmount: String
+  beneficiary: String
+  healthRating: String
+  medicalConditions: [String]
+  tobaccoUse: Boolean
+}
+
 input FinancialServiceFormInput {
   fname: String!
   lname: String!
@@ -98,15 +117,47 @@ input FinancialServiceFormInput {
   retirementDate: String!
 }
 
+input FinancialServiceFormUpdateInput {
+  fname: String
+  lname: String
+  dob: String
+  phone: String
+  email: String
+  addressLine1: String
+  addressLine2: String
+  city: String
+  state: String
+  zip: Int
+  coverageType: String
+  coverageAmount: String
+  beneficiary: String
+  estimatedNetWorth: Int
+  retirementDate: String
+}
+
 input AgentInput {
   fname: String!
   lname: String!
   description: String!
 }
 
+input AgentUpdateInput {
+  fname: String
+  lname: String
+  description: String
+}
+
 type InsertionResponse {
   message: String!
   id: ID!
+}
+
+type UpdateResponse {
+  message: String!
+}
+
+type DeletionResponse {
+  message: String!
 }
 
 type Query {
@@ -120,8 +171,20 @@ type Query {
 
 type Mutation {
   insertInsuranceForm(insuranceFormInput: InsuranceFormInput): InsertionResponse
+  updateInsuranceForm(
+    id: String!
+    insuranceFormInput: InsuranceFormUpdateInput
+  ): UpdateResponse
+  deleteInsuranceForm(id: String!): DeletionResponse
   insertFinancialServiceForm(
     financialServiceFormInput: FinancialServiceFormInput
   ): InsertionResponse
+  updateFinancialServiceForm(
+    id: String!
+    financialServiceFormInput: FinancialServiceFormUpdateInput
+  ): UpdateResponse
+  deleteFinancialServiceForm(id: String!): DeletionResponse
   insertAgent(agentInput: AgentInput): InsertionResponse
+  updateAgent(id: String!, agentInput: AgentUpdateInput): UpdateResponse
+  deleteAgent(id: String!): DeletionResponse
 }

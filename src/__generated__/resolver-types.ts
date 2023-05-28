@@ -29,6 +29,12 @@ export type AgentInput = {
   lname: Scalars['String'];
 };
 
+export type AgentUpdateInput = {
+  description?: InputMaybe<Scalars['String']>;
+  fname?: InputMaybe<Scalars['String']>;
+  lname?: InputMaybe<Scalars['String']>;
+};
+
 export type BaseForm = {
   _id?: Maybe<Scalars['ID']>;
   addressLine1: Scalars['String'];
@@ -44,6 +50,11 @@ export type BaseForm = {
   phone: Scalars['String'];
   state: Scalars['String'];
   zip: Scalars['Int'];
+};
+
+export type DeletionResponse = {
+  __typename?: 'DeletionResponse';
+  message: Scalars['String'];
 };
 
 export type FinancialServiceForm = BaseForm & {
@@ -82,6 +93,24 @@ export type FinancialServiceFormInput = {
   retirementDate: Scalars['String'];
   state: Scalars['String'];
   zip: Scalars['Int'];
+};
+
+export type FinancialServiceFormUpdateInput = {
+  addressLine1?: InputMaybe<Scalars['String']>;
+  addressLine2?: InputMaybe<Scalars['String']>;
+  beneficiary?: InputMaybe<Scalars['String']>;
+  city?: InputMaybe<Scalars['String']>;
+  coverageAmount?: InputMaybe<Scalars['String']>;
+  coverageType?: InputMaybe<Scalars['String']>;
+  dob?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  estimatedNetWorth?: InputMaybe<Scalars['Int']>;
+  fname?: InputMaybe<Scalars['String']>;
+  lname?: InputMaybe<Scalars['String']>;
+  phone?: InputMaybe<Scalars['String']>;
+  retirementDate?: InputMaybe<Scalars['String']>;
+  state?: InputMaybe<Scalars['String']>;
+  zip?: InputMaybe<Scalars['Int']>;
 };
 
 export type InsertionResponse = {
@@ -130,11 +159,51 @@ export type InsuranceFormInput = {
   zip: Scalars['Int'];
 };
 
+export type InsuranceFormUpdateInput = {
+  addressLine1?: InputMaybe<Scalars['String']>;
+  addressLine2?: InputMaybe<Scalars['String']>;
+  beneficiary?: InputMaybe<Scalars['String']>;
+  city?: InputMaybe<Scalars['String']>;
+  coverageAmount?: InputMaybe<Scalars['String']>;
+  coverageType?: InputMaybe<Scalars['String']>;
+  dob?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  fname?: InputMaybe<Scalars['String']>;
+  healthRating?: InputMaybe<Scalars['String']>;
+  lname?: InputMaybe<Scalars['String']>;
+  medicalConditions?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  phone?: InputMaybe<Scalars['String']>;
+  state?: InputMaybe<Scalars['String']>;
+  tobaccoUse?: InputMaybe<Scalars['Boolean']>;
+  zip?: InputMaybe<Scalars['Int']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  deleteAgent?: Maybe<DeletionResponse>;
+  deleteFinancialServiceForm?: Maybe<DeletionResponse>;
+  deleteInsuranceForm?: Maybe<DeletionResponse>;
   insertAgent?: Maybe<InsertionResponse>;
   insertFinancialServiceForm?: Maybe<InsertionResponse>;
   insertInsuranceForm?: Maybe<InsertionResponse>;
+  updateAgent?: Maybe<UpdateResponse>;
+  updateFinancialServiceForm?: Maybe<UpdateResponse>;
+  updateInsuranceForm?: Maybe<UpdateResponse>;
+};
+
+
+export type MutationDeleteAgentArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteFinancialServiceFormArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteInsuranceFormArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -150,6 +219,24 @@ export type MutationInsertFinancialServiceFormArgs = {
 
 export type MutationInsertInsuranceFormArgs = {
   insuranceFormInput?: InputMaybe<InsuranceFormInput>;
+};
+
+
+export type MutationUpdateAgentArgs = {
+  agentInput?: InputMaybe<AgentUpdateInput>;
+  id: Scalars['String'];
+};
+
+
+export type MutationUpdateFinancialServiceFormArgs = {
+  financialServiceFormInput?: InputMaybe<FinancialServiceFormUpdateInput>;
+  id: Scalars['String'];
+};
+
+
+export type MutationUpdateInsuranceFormArgs = {
+  id: Scalars['String'];
+  insuranceFormInput?: InputMaybe<InsuranceFormUpdateInput>;
 };
 
 export type Query = {
@@ -175,6 +262,11 @@ export type QueryGetFinancialServiceFormArgs = {
 
 export type QueryGetInsuranceFormArgs = {
   id: Scalars['String'];
+};
+
+export type UpdateResponse = {
+  __typename?: 'UpdateResponse';
+  message: Scalars['String'];
 };
 
 export type AdditionalEntityFields = {
@@ -257,16 +349,21 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']>;
   String: ResolverTypeWrapper<Scalars['String']>;
   AgentInput: AgentInput;
+  AgentUpdateInput: AgentUpdateInput;
   BaseForm: ResolversTypes['FinancialServiceForm'] | ResolversTypes['InsuranceForm'];
   Int: ResolverTypeWrapper<Scalars['Int']>;
+  DeletionResponse: ResolverTypeWrapper<DeletionResponse>;
   FinancialServiceForm: ResolverTypeWrapper<FinancialServiceForm>;
   FinancialServiceFormInput: FinancialServiceFormInput;
+  FinancialServiceFormUpdateInput: FinancialServiceFormUpdateInput;
   InsertionResponse: ResolverTypeWrapper<InsertionResponse>;
   InsuranceForm: ResolverTypeWrapper<InsuranceForm>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   InsuranceFormInput: InsuranceFormInput;
+  InsuranceFormUpdateInput: InsuranceFormUpdateInput;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
+  UpdateResponse: ResolverTypeWrapper<UpdateResponse>;
   AdditionalEntityFields: AdditionalEntityFields;
 };
 
@@ -276,16 +373,21 @@ export type ResolversParentTypes = {
   ID: Scalars['ID'];
   String: Scalars['String'];
   AgentInput: AgentInput;
+  AgentUpdateInput: AgentUpdateInput;
   BaseForm: ResolversParentTypes['FinancialServiceForm'] | ResolversParentTypes['InsuranceForm'];
   Int: Scalars['Int'];
+  DeletionResponse: DeletionResponse;
   FinancialServiceForm: FinancialServiceForm;
   FinancialServiceFormInput: FinancialServiceFormInput;
+  FinancialServiceFormUpdateInput: FinancialServiceFormUpdateInput;
   InsertionResponse: InsertionResponse;
   InsuranceForm: InsuranceForm;
   Boolean: Scalars['Boolean'];
   InsuranceFormInput: InsuranceFormInput;
+  InsuranceFormUpdateInput: InsuranceFormUpdateInput;
   Mutation: {};
   Query: {};
+  UpdateResponse: UpdateResponse;
   AdditionalEntityFields: AdditionalEntityFields;
 };
 
@@ -362,6 +464,11 @@ export type BaseFormResolvers<ContextType = Context, ParentType extends Resolver
   zip?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
 };
 
+export type DeletionResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['DeletionResponse'] = ResolversParentTypes['DeletionResponse']> = {
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type FinancialServiceFormResolvers<ContextType = Context, ParentType extends ResolversParentTypes['FinancialServiceForm'] = ResolversParentTypes['FinancialServiceForm']> = {
   _id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   addressLine1?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -410,9 +517,15 @@ export type InsuranceFormResolvers<ContextType = Context, ParentType extends Res
 };
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  deleteAgent?: Resolver<Maybe<ResolversTypes['DeletionResponse']>, ParentType, ContextType, RequireFields<MutationDeleteAgentArgs, 'id'>>;
+  deleteFinancialServiceForm?: Resolver<Maybe<ResolversTypes['DeletionResponse']>, ParentType, ContextType, RequireFields<MutationDeleteFinancialServiceFormArgs, 'id'>>;
+  deleteInsuranceForm?: Resolver<Maybe<ResolversTypes['DeletionResponse']>, ParentType, ContextType, RequireFields<MutationDeleteInsuranceFormArgs, 'id'>>;
   insertAgent?: Resolver<Maybe<ResolversTypes['InsertionResponse']>, ParentType, ContextType, Partial<MutationInsertAgentArgs>>;
   insertFinancialServiceForm?: Resolver<Maybe<ResolversTypes['InsertionResponse']>, ParentType, ContextType, Partial<MutationInsertFinancialServiceFormArgs>>;
   insertInsuranceForm?: Resolver<Maybe<ResolversTypes['InsertionResponse']>, ParentType, ContextType, Partial<MutationInsertInsuranceFormArgs>>;
+  updateAgent?: Resolver<Maybe<ResolversTypes['UpdateResponse']>, ParentType, ContextType, RequireFields<MutationUpdateAgentArgs, 'id'>>;
+  updateFinancialServiceForm?: Resolver<Maybe<ResolversTypes['UpdateResponse']>, ParentType, ContextType, RequireFields<MutationUpdateFinancialServiceFormArgs, 'id'>>;
+  updateInsuranceForm?: Resolver<Maybe<ResolversTypes['UpdateResponse']>, ParentType, ContextType, RequireFields<MutationUpdateInsuranceFormArgs, 'id'>>;
 };
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
@@ -424,14 +537,21 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   getInsuranceForms?: Resolver<Maybe<Array<Maybe<ResolversTypes['InsuranceForm']>>>, ParentType, ContextType>;
 };
 
+export type UpdateResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UpdateResponse'] = ResolversParentTypes['UpdateResponse']> = {
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = Context> = {
   Agent?: AgentResolvers<ContextType>;
   BaseForm?: BaseFormResolvers<ContextType>;
+  DeletionResponse?: DeletionResponseResolvers<ContextType>;
   FinancialServiceForm?: FinancialServiceFormResolvers<ContextType>;
   InsertionResponse?: InsertionResponseResolvers<ContextType>;
   InsuranceForm?: InsuranceFormResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  UpdateResponse?: UpdateResponseResolvers<ContextType>;
 };
 
 export type DirectiveResolvers<ContextType = Context> = {
