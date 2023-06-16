@@ -1,0 +1,153 @@
+type Event {
+  id: ID!
+  title: String!
+  description: String!
+  datetime: String!
+  venue: ID!
+  vendors: [Vendor]
+  users: [User]
+}
+
+type Vendor {
+  id: ID!
+  name: String!
+  description: String!
+  phone: String!
+  email: String!
+  address: String!
+  city: String!
+  state: String!
+  zip: String!
+  country: String!
+  website: String!
+  events: [Event]
+}
+
+type Venue {
+  id: ID!
+  name: String!
+  description: String!
+  phone: String!
+  email: String!
+  address: String!
+  city: String!
+  state: String!
+  zip: String!
+  country: String!
+  website: String!
+  events: [Event]
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+type User {
+  id: ID!
+  role: Role!
+  fname: String!
+  lname: String!
+  phone: String!
+  email: String!
+  password: String!
+  events: [Event]
+}
+
+type Query {
+  events: [Event]
+  event(id: ID!): Event
+  vendors: [Vendor]
+  vendor(id: ID!): Vendor
+  venues: [Venue]
+  venue(id: ID!): Venue
+  users: [User]
+  user(id: ID!): User
+}
+
+type Mutation {
+  createEvent(
+    title: String!
+    description: String!
+    datetime: String!
+    venue: ID!
+  ): Event
+  updateEvent(
+    id: ID!
+    title: String!
+    description: String!
+    datetime: String!
+    venue: ID!
+  ): Event
+  deleteEvent(id: ID!): Event
+  createVendor(
+    name: String!
+    description: String!
+    phone: String!
+    email: String!
+    address: String!
+    city: String!
+    state: String!
+    zip: String!
+    country: String!
+    website: String!
+  ): Vendor
+  updateVendor(
+    id: ID!
+    name: String!
+    description: String!
+    phone: String!
+    email: String!
+    address: String!
+    city: String!
+    state: String!
+    zip: String!
+    country: String!
+    website: String!
+  ): Vendor
+  deleteVendor(id: ID!): Vendor
+  createVenue(
+    name: String!
+    description: String!
+    phone: String!
+    email: String!
+    address: String!
+    city: String!
+    state: String!
+    zip: String!
+    country: String!
+    website: String!
+  ): Venue
+  updateVenue(
+    id: ID!
+    name: String!
+    description: String!
+    phone: String!
+    email: String!
+    address: String!
+    city: String!
+    state: String!
+    zip: String!
+    country: String!
+    website: String!
+  ): Venue
+  deleteVenue(id: ID!): Venue
+  createUser(
+    role: Role!
+    fname: String!
+    lname: String!
+    phone: String!
+    email: String!
+    password: String!
+  ): User
+  updateUser(
+    id: ID!
+    role: Role!
+    fname: String!
+    lname: String!
+    phone: String!
+    email: String!
+    password: String!
+  ): User
+  deleteUser(id: ID!): User
+}

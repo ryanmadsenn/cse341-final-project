@@ -7,25 +7,33 @@ specifiers:
   '@graphql-codegen/typescript-mongodb': 2.4.6
   '@graphql-codegen/typescript-resolvers': 3.2.1
   '@types/body-parser': ^1.19.2
+  '@types/cors': ^2.8.13
   '@types/express': ^4.17.17
   '@types/node': ^18.16.3
   '@typescript-eslint/eslint-plugin': ^5.59.1
   '@typescript-eslint/parser': ^5.59.1
   body-parser: ^1.20.2
+  cors: ^2.8.5
   dotenv: ^16.0.3
   eslint: ^8.39.0
   express: ^4.18.2
+  express-oauth2-jwt-bearer: ^1.5.0
   graphql: ^16.6.0
+  http: 0.0.1-security
   mongodb: ^5.3.0
   nodemon: ^2.0.22
   typescript: ^5.0.4
 
 dependencies:
   '@apollo/server': 4.7.1_graphql@16.6.0
+  '@types/cors': 2.8.13
   body-parser: 1.20.2
+  cors: 2.8.5
   dotenv: 16.0.3
   express: 4.18.2
+  express-oauth2-jwt-bearer: 1.5.0
   graphql: 16.6.0
+  http: 0.0.1-security
   mongodb: 5.3.0
   nodemon: 2.0.22
 
@@ -1673,6 +1681,12 @@ packages:
     dependencies:
       '@types/node': 18.16.3
 
+  /@types/cors/2.8.13:
+    resolution: {integrity: sha512-RG8AStHlUiV5ysZQKq97copd2UmVYw3/pRMLefISZ3S1hK104Cwm7iLQ3fTKx+lsUH2CE8FlLaYeEA2LSeqYUA==}
+    dependencies:
+      '@types/node': 18.16.3
+    dev: false
+
   /@types/express-serve-static-core/4.17.34:
     resolution: {integrity: sha512-fvr49XlCGoUj2Pp730AItckfjat4WNb0lb3kfrLWffd+RLeoGAMsq7UOy04PAPtoL01uKwcp6u8nhzpgpDYr3w==}
     dependencies:
@@ -2762,6 +2776,13 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
+  /express-oauth2-jwt-bearer/1.5.0:
+    resolution: {integrity: sha512-C8avk1VfopX3zjqfTLg9EuYFjNRdmXdYncBoZGmjxQzGx7cQRiupeWV5r3G2SYGzx0gDw1uyu1cdJrmILOvd3g==}
+    engines: {node: ^12.19.0 || ^14.15.0 || ^16.13.0 || ^18.12.0 || ^20.2.0}
+    dependencies:
+      jose: 4.14.4
+    dev: false
+
   /express/4.18.2:
     resolution: {integrity: sha512-5/PsL6iGPdfQ/lKM1UuielYgv3BUoJfz1aUwU9vHZ+J7gyvwdQXFEBIEIaxeGf0GIcreATNyBExtalisDbuMqQ==}
     engines: {node: '>= 0.10.0'}
@@ -3165,6 +3186,10 @@ packages:
       - supports-color
     dev: true
 
+  /http/0.0.1-security:
+    resolution: {integrity: sha512-RnDvP10Ty9FxqOtPZuxtebw1j4L/WiqNMDtuc1YMH1XQm5TgDRaR1G9u8upL6KD1bXHSp9eSXo/ED+8Q7FAr+g==}
+    dev: false
+
   /https-proxy-agent/6.2.0:
     resolution: {integrity: sha512-4xhCnMpxR9fupa7leh9uJK2P/qjYIeaM9uZ9c1bi1JDSwX2VH9NDk/oKSToNX4gBKa2WT31Mldne7e26ckohLQ==}
     engines: {node: '>= 14'}
@@ -3376,7 +3401,6 @@ packages:
 
   /jose/4.14.4:
     resolution: {integrity: sha512-j8GhLiKmUAh+dsFXlX1aJCbt5KMibuKb+d7j1JaOJG6s2UjX1PQlW+OKB/sD4a/5ZYF4RcmYmLSndOoU3Lt/3g==}
-    dev: true
 
   /js-sdsl/4.4.0:
     resolution: {integrity: sha512-FfVSdx6pJ41Oa+CF7RDaFmTnCaFhua+SNYQX74riGOpl96x+2jQCqEfQ2bnXu/5DPCqlRuiqyvTJM0Qjz26IVg==}
