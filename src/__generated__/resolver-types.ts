@@ -190,6 +190,12 @@ export type QueryVenueArgs = {
   id: Scalars['ID'];
 };
 
+export type Admin = {
+  id: string;
+  name: string;
+  // Other properties...
+};
+
 export enum Role {
   Admin = 'ADMIN',
   User = 'USER'
@@ -326,6 +332,7 @@ export type ResolversTypes = {
   Venue: ResolverTypeWrapper<Venue>;
   AdditionalEntityFields: AdditionalEntityFields;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Context: ResolverTypeWrapper<Context>; // Added
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -398,6 +405,12 @@ export type EventResolvers<ContextType = Context, ParentType extends ResolversPa
   vendors?: Resolver<Maybe<Array<Maybe<ResolversTypes['Vendor']>>>, ParentType, ContextType>;
   venue?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+// Added
+export type ResolversContext = {
+  admin: Admin;
+  context: Context;
 };
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
