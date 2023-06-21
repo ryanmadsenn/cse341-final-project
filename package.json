@@ -38,9 +38,6 @@
     "eslint": "^8.39.0",
     "typescript": "^5.0.4"
   },
-  "engines": {
-    "node": ">=16.0.0"
-  },
   "nodemonConfig": {
     "watch": [
       "src"
