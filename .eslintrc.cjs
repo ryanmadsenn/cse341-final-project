@@ -15,7 +15,6 @@ module.exports = {
     "no-trailing-spaces": "error",
     "no-unreachable": "error",
     camelcase: "error",
-    "capitalized-comments": "error",
     "spaced-comment": "error",
     "dot-notation": "error",
     "no-var": "error",
