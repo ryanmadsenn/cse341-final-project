@@ -56,6 +56,10 @@ app.use(
   })
 );
 
+app.get("/", (req, res) => {
+  res.redirect("/graphql");
+});
+
 await new Promise<void>((resolve) =>
   httpServer.listen({ port: process.env.PORT }, resolve)
 );

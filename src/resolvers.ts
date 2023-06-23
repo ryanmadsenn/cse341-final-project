@@ -1,4 +1,4 @@
-import { Resolvers, Event, User, Vendor, Venue, Admin  } from "./__generated__/resolver-types";
+import { Resolvers, Event, Vendor } from "./__generated__/resolver-types";
 import { Context } from "./server";
 import { ObjectId } from "mongodb";
 
@@ -22,7 +22,7 @@ export const resolvers: Resolvers = {
     createEvent: (_, args, context: Context) => {
       // Implement the logic to create a new event
       const newEvent: Event = {
-        id: '1',
+        id: "1",
         title: args.title,
         description: args.description,
         datetime: args.datetime,
@@ -30,29 +30,27 @@ export const resolvers: Resolvers = {
         vendors: [],
         users: [],
       };
-     return newEvent;
+      return newEvent;
     },
     deleteVendor: async (_, args, context: Context) => {
-    const { id } = args;
+      const { id } = args;
 
-    const vendorId = new ObjectId(id);
+      const vendorId = new ObjectId(id);
 
-    const vendorToDelete = await context.dataSources.db.collection<Vendor>("vendors").findOne({ _id: vendorId });
-    if (!vendorToDelete) {
-      throw new Error(`Vendor with ID ${id} not found`);
-    }
+      const vendorToDelete = await context.dataSources.db
+        .collection<Vendor>("vendors")
+        .findOne({ _id: vendorId });
+      if (!vendorToDelete) {
+        throw new Error(`Vendor with ID ${id} not found`);
+      }
 
-    context.dataSources.db.collection<Vendor>("vendors").deleteOne({ _id: vendorId  });
+      context.dataSources.db
+        .collection<Vendor>("vendors")
+        .deleteOne({ _id: vendorId });
 
-    return vendorToDelete;
+      return vendorToDelete;
+    },
   },
-
-
-
-  },
-  };
-
-
+};
 
 export default resolvers;
-
