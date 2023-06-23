@@ -5,6 +5,7 @@ import express, { json } from "express";
 import http from "http";
 import cors from "cors";
 import { auth } from "express-oauth2-jwt-bearer";
+import axios from "axios";
 import { readFileSync } from "fs";
 import { resolvers } from "./resolvers.js";
 import { Db } from "mongodb";
@@ -33,6 +34,17 @@ const server = new ApolloServer<Context>({
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 await server.start();
+
+setInterval(async () => {
+  const response = await axios.get(
+    "https://cse-341-final-project-z6bj.onrender.com/health"
+  );
+  if (response.status === 200)
+    // eslint-disable-next-line no-console
+    console.log("Server pinged");
+  // eslint-disable-next-line no-console
+  else console.log("Unable to ping server");
+}, 840_000);
 
 app.use(
   "/graphql",
