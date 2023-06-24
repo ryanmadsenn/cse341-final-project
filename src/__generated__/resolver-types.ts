@@ -47,12 +47,15 @@ export type MutationCreateEventArgs = {
   datetime: Scalars['String'];
   description: Scalars['String'];
   title: Scalars['String'];
+  users?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  vendors?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   venue: Scalars['ID'];
 };
 
 
 export type MutationCreateUserArgs = {
   email: Scalars['String'];
+  events?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   fname: Scalars['String'];
   lname: Scalars['String'];
   password: Scalars['String'];
@@ -67,6 +70,7 @@ export type MutationCreateVendorArgs = {
   country: Scalars['String'];
   description: Scalars['String'];
   email: Scalars['String'];
+  events?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   name: Scalars['String'];
   phone: Scalars['String'];
   state: Scalars['String'];
@@ -81,6 +85,7 @@ export type MutationCreateVenueArgs = {
   country: Scalars['String'];
   description: Scalars['String'];
   email: Scalars['String'];
+  events?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   name: Scalars['String'];
   phone: Scalars['String'];
   state: Scalars['String'];
@@ -114,12 +119,15 @@ export type MutationUpdateEventArgs = {
   description: Scalars['String'];
   id: Scalars['ID'];
   title: Scalars['String'];
+  users?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  vendors?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   venue: Scalars['ID'];
 };
 
 
 export type MutationUpdateUserArgs = {
   email: Scalars['String'];
+  events?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   fname: Scalars['String'];
   id: Scalars['ID'];
   lname: Scalars['String'];
@@ -135,6 +143,7 @@ export type MutationUpdateVendorArgs = {
   country: Scalars['String'];
   description: Scalars['String'];
   email: Scalars['String'];
+  events?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   id: Scalars['ID'];
   name: Scalars['String'];
   phone: Scalars['String'];
@@ -150,6 +159,7 @@ export type MutationUpdateVenueArgs = {
   country: Scalars['String'];
   description: Scalars['String'];
   email: Scalars['String'];
+  events?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   id: Scalars['ID'];
   name: Scalars['String'];
   phone: Scalars['String'];

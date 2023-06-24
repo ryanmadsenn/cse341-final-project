@@ -71,6 +71,8 @@ type Mutation {
     description: String!
     datetime: String!
     venue: ID!
+    vendors: [ID]
+    users: [ID]
   ): Event
   updateEvent(
     id: ID!
@@ -78,6 +80,8 @@ type Mutation {
     description: String!
     datetime: String!
     venue: ID!
+    vendors: [ID]
+    users: [ID]
   ): Event
   deleteEvent(id: ID!): Event
   createVendor(
@@ -91,6 +95,7 @@ type Mutation {
     zip: String!
     country: String!
     website: String!
+    events: [ID]
   ): Vendor
   updateVendor(
     id: ID!
@@ -104,6 +109,7 @@ type Mutation {
     zip: String!
     country: String!
     website: String!
+    events: [ID]
   ): Vendor
   deleteVendor(id: ID!): Vendor
   createVenue(
@@ -117,6 +123,7 @@ type Mutation {
     zip: String!
     country: String!
     website: String!
+    events: [ID]
   ): Venue
   updateVenue(
     id: ID!
@@ -130,6 +137,7 @@ type Mutation {
     zip: String!
     country: String!
     website: String!
+    events: [ID]
   ): Venue
   deleteVenue(id: ID!): Venue
   createUser(
@@ -139,6 +147,7 @@ type Mutation {
     phone: String!
     email: String!
     password: String!
+    events: [ID]
   ): User
   updateUser(
     id: ID!
@@ -148,6 +157,7 @@ type Mutation {
     phone: String!
     email: String!
     password: String!
+    events: [ID]
   ): User
   deleteUser(id: ID!): User
 }
