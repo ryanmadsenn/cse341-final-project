@@ -75,6 +75,7 @@ app.use(
 app.get("/health", (req, res) => {
   res.status(200).send("OK");
 });
+
 app.get("/", (req, res) => {
   const rootDir = path.resolve(__dirname, "..");
   res.sendFile(path.join(rootDir + "/public/index.html"));

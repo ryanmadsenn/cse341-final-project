@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
+    <!-- imports for auth0 -->
     <script>
       const configureClient = async () => {
         auth0Client = await auth0.createAuth0Client({
@@ -71,6 +72,7 @@
           },
         });
       };
+
       const resetLocalStorage = () => {
         localStorage.clear();
         const cookies = document.cookie.split(";");
@@ -81,7 +83,6 @@
         location.reload();
       };
     </script>
-    <!-- imports for auth 0 -->
     <style>
       .hidden {
         display: none;
@@ -94,7 +95,7 @@
     </style>
 
     <script>
-      // example of how to retrieve data from sql
+      // Example of how to retrieve data from our graphql server.
       var myHeaders = new Headers();
 
       myHeaders.append("Content-Type", "application/json");
