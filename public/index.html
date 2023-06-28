@@ -1,0 +1,138 @@
+<!-- home page used to route to the other pages and give an overview of what our website is. and allows user to log in-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
+    <script>
+      const configureClient = async () => {
+        auth0Client = await auth0.createAuth0Client({
+          domain: "dev-p7xq1dvhz2bqeljn.us.auth0.com",
+          clientId: "gxZHewSlncZFVP8DF0LyHVdCKoMknB0a",
+          authorizationParams: {
+            audience: "https://localhost:8080",
+          },
+        });
+      };
+
+      window.onload = async () => {
+        await configureClient();
+        updateUI();
+        const isAuthenticated = await auth0Client.isAuthenticated();
+        if (isAuthenticated) {
+          // show the gated content
+          return;
+        }
+        // NEW - check for the code and state parameters
+        const query = window.location.search;
+
+        if (query.includes("code=") && query.includes("state=")) {
+          // Process the login state
+          await auth0Client.handleRedirectCallback();
+          updateUI();
+          // Use replaceState to redirect the user away and remove the querystring parameters
+          window.history.replaceState({}, document.title, "/");
+        }
+      };
+
+      const updateUI = async () => {
+        const isAuthenticated = await auth0Client.isAuthenticated();
+        document.getElementById("btn-logout").disabled = !isAuthenticated;
+
+        document.getElementById("btn-login").disabled = isAuthenticated;
+
+        if (isAuthenticated) {
+          document.getElementById("gated-content").classList.remove("hidden");
+
+          document.getElementById("ipt-access-token").innerHTML =
+            await auth0Client.getTokenSilently();
+
+          document.getElementById("ipt-user-profile").textContent =
+            JSON.stringify(await auth0Client.getUser());
+        } else {
+          document.getElementById("gated-content").classList.add("hidden");
+        }
+      };
+
+      const login = async () => {
+        await auth0Client.loginWithRedirect({
+          authorizationParams: {
+            redirect_uri: window.location.origin,
+          },
+        });
+      };
+
+      const logout = () => {
+        auth0Client.logout({
+          logoutParams: {
+            returnTo: window.location.origin,
+          },
+        });
+      };
+      const resetLocalStorage = () => {
+        localStorage.clear();
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          document.cookie =
+            cookies[i] + "=; expires=" + new Date(0).toUTCString();
+        }
+        location.reload();
+      };
+    </script>
+    <!-- imports for auth 0 -->
+    <style>
+      .hidden {
+        display: none;
+      }
+
+      label {
+        margin-bottom: 10px;
+        display: block;
+      }
+    </style>
+
+    <script>
+      // example of how to retrieve data from sql
+      var myHeaders = new Headers();
+
+      myHeaders.append("Content-Type", "application/json");
+
+      var graphql = JSON.stringify({
+        query: "{\n    events {\n        datetime\n    }\n}",
+        variables: {},
+      });
+      var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: graphql,
+        redirect: "follow",
+      };
+      fetch("http://localhost:8080/graphql", requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
+    </script>
+  </head>
+  <body>
+    <p>Welcome to our page!</p>
+    <button id="btn-login" disabled="true" onclick="login()">Log in</button>
+    <button id="btn-logout" disabled="true" onclick="logout()">Log out</button>
+    <button id="reset" onclick="resetLocalStorage()">Reset</button>
+    <div class="hidden" id="gated-content">
+      <p>
+        You're seeing this content because you're currently
+        <strong>logged in</strong>.
+      </p>
+      <label>
+        Access token:
+        <pre id="ipt-access-token"></pre>
+      </label>
+      <label>
+        User profile:
+        <pre id="ipt-user-profile"></pre>
+      </label>
+    </div>
+  </body>
+</html>

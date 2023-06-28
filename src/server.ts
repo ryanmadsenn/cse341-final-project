@@ -10,10 +10,14 @@ import { readFileSync } from "fs";
 import { resolvers } from "./resolvers.js";
 import { Db } from "mongodb";
 import { connectDB } from "./connect.js";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const typeDefs = readFileSync("./schema.graphql", "utf-8");
 const db = await connectDB();
-
 // const verifyJWT = auth({
 //   audience: process.env.AUTH0_AUDIENCE as string,
 //   issuerBaseURL: process.env.AUTH0_DOMAIN as string,
@@ -71,9 +75,9 @@ app.use(
 app.get("/health", (req, res) => {
   res.status(200).send("OK");
 });
-
 app.get("/", (req, res) => {
-  res.redirect("/graphql");
+  const rootDir = path.resolve(__dirname, "..");
+  res.sendFile(path.join(rootDir + "/public/index.html"));
 });
 
 await new Promise<void>((resolve) =>
