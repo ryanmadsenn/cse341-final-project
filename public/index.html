@@ -1,10 +1,12 @@
 <!-- home page used to route to the other pages and give an overview of what our website is. and allows user to log in-->
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Event Website Creator</title>
+    <link rel="stylesheet" href="styles/main.css">
     <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
     <!-- imports for auth0 -->
     <script>
@@ -116,8 +118,9 @@
         .catch((error) => console.log("error", error));
     </script>
   </head>
+
   <body>
-    <p>Welcome to our page!</p>
+    <h1>Event Website Creator</h1>
     <button id="btn-login" disabled="true" onclick="login()">Log in</button>
     <button id="btn-logout" disabled="true" onclick="logout()">Log out</button>
     <button id="reset" onclick="resetLocalStorage()">Reset</button>
@@ -136,4 +139,5 @@
       </label>
     </div>
   </body>
+
 </html>
