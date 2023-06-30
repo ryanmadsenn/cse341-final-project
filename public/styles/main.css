@@ -1,18 +1,18 @@
 :root {
     --heading-color: #0f3375;
-    --background1: #13459c;
-    --background2: #1557c0;
-    --background3: #196bde;
-    --background4: #2382f7;
-    --link-color: #4b9cf9;
-    --link-highlighted: #77b6fb;
-    --link-highlighted2: #a4cefc;
-    --link-highlighted3: #cce4fd;
-    --link-highlighted4: #e8f3fe;
+    --color1: #13459c;
+    --color2: #1557c0;
+    --color3: #196bde;
+    --color4: #2382f7;
+    --color5: #4b9cf9;
+    --color6: #77b6fb;
+    --color7: #a4cefc;
+    --color8: #cce4fd;
+    --color9: #e8f3fe;
     --heading-font: 'Cormorant Garamond', serif;
     --paragraph-font: 'Noto Serif', serif;
 }
 
 h1 {
-
+    color: var(--heading-color);
 }
