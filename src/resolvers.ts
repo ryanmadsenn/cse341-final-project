@@ -1,4 +1,11 @@
-import { Resolvers, Event, Vendor, Venue, User, Role } from "./__generated__/resolver-types";
+import {
+  Resolvers,
+  Event,
+  Vendor,
+  Venue,
+  User,
+  Role,
+} from "./__generated__/resolver-types.js";
 import { Context } from "./server";
 import { ObjectId } from "mongodb";
 
@@ -33,25 +40,38 @@ export const resolvers: Resolvers = {
       return newEvent;
     },
     updateEvent: (_, args, { dataSources }) => {
-
       const { id, title, description, datetime, venue } = args;
 
-      dataSources.db.collection<Event>("events").updateOne(
-        { _id: new ObjectId(id) },
-        { $set: { title, description, datetime, venue } }
-      );
+      dataSources.db
+        .collection<Event>("events")
+        .updateOne(
+          { _id: new ObjectId(id) },
+          { $set: { title, description, datetime, venue } }
+        );
 
-      return { id, title, description, datetime, venue, vendors: [], users: [] };
+      return {
+        id,
+        title,
+        description,
+        datetime,
+        venue,
+        vendors: [],
+        users: [],
+      };
     },
     deleteEvent: async (_, args, { dataSources }) => {
       const { id } = args;
 
-      const eventToDelete = await dataSources.db.collection<Event>("events").findOne({ _id: new ObjectId(id) });
+      const eventToDelete = await dataSources.db
+        .collection<Event>("events")
+        .findOne({ _id: new ObjectId(id) });
       if (!eventToDelete) {
         throw new Error(`Event with ID ${id} not found`);
       }
 
-      await dataSources.db.collection<Event>("events").deleteOne({ _id: new ObjectId(id) });
+      await dataSources.db
+        .collection<Event>("events")
+        .deleteOne({ _id: new ObjectId(id) });
 
       return eventToDelete;
     },
@@ -68,7 +88,7 @@ export const resolvers: Resolvers = {
         phone: "",
         state: "",
         website: "",
-        zip: ""
+        zip: "",
       };
       // Save the new vendor to the database
       dataSources.db.collection<Vendor>("vendors").insertOne(newVendor);
@@ -77,12 +97,13 @@ export const resolvers: Resolvers = {
     updateVendor: async (_, args, { dataSources }) => {
       const { id, ...updateData } = args;
 
-      await dataSources.db.collection<Vendor>("vendors").updateOne(
-        { _id: new ObjectId(id) },
-        { $set: { updateData } }
-      );
+      await dataSources.db
+        .collection<Vendor>("vendors")
+        .updateOne({ _id: new ObjectId(id) }, { $set: { updateData } });
 
-      const updatedVendor = await dataSources.db.collection<Vendor>("vendors").findOne({ _id: new ObjectId(id) });
+      const updatedVendor = await dataSources.db
+        .collection<Vendor>("vendors")
+        .findOne({ _id: new ObjectId(id) });
 
       if (!updatedVendor) {
         throw new Error(`Vendor with ID ${id} not found`);
@@ -121,7 +142,7 @@ export const resolvers: Resolvers = {
         phone: "",
         state: "",
         website: "",
-        zip: ""
+        zip: "",
       };
       // Save the new venue to the database
       dataSources.db.collection<Venue>("venues").insertOne(newVenue);
@@ -130,12 +151,13 @@ export const resolvers: Resolvers = {
     updateVenue: async (_, args, { dataSources }) => {
       const { id, ...updateData } = args;
 
-      await dataSources.db.collection<Venue>("venues").updateOne(
-        { _id: new ObjectId(id) },
-        { $set: { updateData } }
-      );
+      await dataSources.db
+        .collection<Venue>("venues")
+        .updateOne({ _id: new ObjectId(id) }, { $set: { updateData } });
 
-      const updatedVenue = await dataSources.db.collection<Venue>("venues").findOne({ _id: new ObjectId(id) });
+      const updatedVenue = await dataSources.db
+        .collection<Venue>("venues")
+        .findOne({ _id: new ObjectId(id) });
 
       if (!updatedVenue) {
         throw new Error(`Venue with ID ${id} not found`);
@@ -146,12 +168,16 @@ export const resolvers: Resolvers = {
     deleteVenue: async (_, args, { dataSources }) => {
       const { id } = args;
 
-      const venueToDelete = await dataSources.db.collection<Venue>("venues").findOne({ _id: new ObjectId(id) });
+      const venueToDelete = await dataSources.db
+        .collection<Venue>("venues")
+        .findOne({ _id: new ObjectId(id) });
       if (!venueToDelete) {
         throw new Error(`Venue with ID ${id} not found`);
       }
 
-      await dataSources.db.collection<Venue>("venues").deleteOne({ _id: new ObjectId(id) });
+      await dataSources.db
+        .collection<Venue>("venues")
+        .deleteOne({ _id: new ObjectId(id) });
 
       return venueToDelete;
     },
@@ -164,7 +190,7 @@ export const resolvers: Resolvers = {
         lname: args.lname,
         phone: "",
         email: "",
-        password: ""
+        password: "",
       };
       // Save the new user to the database
       dataSources.db.collection<User>("users").insertOne(newUser);
@@ -173,12 +199,13 @@ export const resolvers: Resolvers = {
     updateUser: async (_, args, { dataSources }) => {
       const { id, ...updateData } = args;
 
-      await dataSources.db.collection<User>("users").updateOne(
-        { _id: new ObjectId(id) },
-        { $set: { updateData  } }
-      );
+      await dataSources.db
+        .collection<User>("users")
+        .updateOne({ _id: new ObjectId(id) }, { $set: { updateData } });
 
-      const updatedUser = await dataSources.db.collection<User>("users").findOne({ _id: new ObjectId(id) });
+      const updatedUser = await dataSources.db
+        .collection<User>("users")
+        .findOne({ _id: new ObjectId(id) });
 
       if (!updatedUser) {
         throw new Error(`User with ID ${id} not found`);
@@ -189,12 +216,16 @@ export const resolvers: Resolvers = {
     deleteUser: async (_, args, { dataSources }) => {
       const { id } = args;
 
-      const userToDelete = await dataSources.db.collection<User>("users").findOne({ _id: new ObjectId(id) });
+      const userToDelete = await dataSources.db
+        .collection<User>("users")
+        .findOne({ _id: new ObjectId(id) });
       if (!userToDelete) {
         throw new Error(`User with ID ${id} not found`);
       }
 
-      await dataSources.db.collection<User>("users").deleteOne({ _id: new ObjectId(id) });
+      await dataSources.db
+        .collection<User>("users")
+        .deleteOne({ _id: new ObjectId(id) });
 
       return userToDelete;
     },
