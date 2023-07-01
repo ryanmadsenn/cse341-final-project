@@ -153,7 +153,10 @@
                     </p>
                     <label>
                       Access token:
+                      <div>
                       <p id="ipt-access-token"></p>
+                      <button class="btn btn-primary" onclick="copyToClipboard('ipt-access-token')">Copy</button>
+                    </div>
                     </label>
                     <label>
                       User profile:
@@ -168,7 +171,18 @@
         </div>
       </div>
     </section>
-
+    <script>
+      function copyToClipboard(elementId) {
+        var copyText = document.getElementById(elementId).textContent;
+        var tempInput = document.createElement("input");
+        tempInput.value = copyText;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+        alert("Copied to clipboard: " + copyText);
+      }
+    </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.min.js"></script>
@@ -176,3 +190,4 @@
   </body>
 
 </html>
+
