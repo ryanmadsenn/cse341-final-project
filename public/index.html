@@ -152,15 +152,15 @@
                       You're seeing this content because you're currently
                       <strong>logged in</strong>.
                     </p>
-                    <h2>Access token:</h2>
-
-                    <p id="ipt-access-token"
-                      style="white-space: nowrap; overflow: hidden; border: 1px #444 solid; border-radius: 4px; padding: 2px 5px;">
-                    </p>
-
-                    <h2>User profile:</h2>
-                    <ul class="list-group list-group-flush" id="ipt-user-profile"></ul>
-                    <!-- <pre id="ipt-user-profile"></pre> -->
+                    <label>
+                      Access token:
+                      <p id="ipt-access-token"></p>
+                    </label>
+                    <label>
+                      User profile:
+                      <ul id="ipt-user-profile"></ul>
+                      <!-- <pre id="ipt-user-profile"></pre> -->
+                    </label>
                   </div>
                 </div>
               </div>
@@ -169,7 +169,18 @@
         </div>
       </div>
     </section>
-
+    <script>
+      function copyToClipboard(elementId) {
+        var copyText = document.getElementById(elementId).textContent;
+        var tempInput = document.createElement("input");
+        tempInput.value = copyText;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+        alert("Copied to clipboard: " + copyText);
+      }
+    </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.min.js"></script>
