@@ -1,11 +1,16 @@
 <!-- home page used to route to the other pages and give an overview of what our website is. and allows user to log in-->
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Event Website Creator</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
     <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+
     <!-- imports for auth0 -->
     <script>
       const configureClient = async () => {
@@ -50,8 +55,17 @@
           document.getElementById("ipt-access-token").innerHTML =
             await auth0Client.getTokenSilently();
 
-          document.getElementById("ipt-user-profile").textContent =
-            JSON.stringify(await auth0Client.getUser());
+
+          let userProfile = JSON.parse(JSON.stringify(await auth0Client.getUser()));
+          console.log(userProfile)
+          for (key in userProfile) {
+            const li = document.createElement("li");
+            li.classList.add("list-group", "text-start")
+            li.textContent = key + ": " + userProfile[key];
+            document.getElementById("ipt-user-profile").appendChild(li);
+          }
+          // document.getElementById("ipt-user-profile").textContent =
+          // JSON.stringify(await auth0Client.getUser());
         } else {
           document.getElementById("gated-content").classList.add("hidden");
         }
@@ -116,24 +130,63 @@
         .catch((error) => console.log("error", error));
     </script>
   </head>
+
   <body>
-    <p>Welcome to our page!</p>
-    <button id="btn-login" disabled="true" onclick="login()">Log in</button>
-    <button id="btn-logout" disabled="true" onclick="logout()">Log out</button>
-    <button id="reset" onclick="resetLocalStorage()">Reset</button>
-    <div class="hidden" id="gated-content">
-      <p>
-        You're seeing this content because you're currently
-        <strong>logged in</strong>.
-      </p>
-      <label>
-        Access token:
-        <pre id="ipt-access-token"></pre>
-      </label>
-      <label>
-        User profile:
-        <pre id="ipt-user-profile"></pre>
-      </label>
-    </div>
+    <section class="vh-100 overflow-auto" style="background-color: #508bfc;">
+      <div class="container h-100" style="background-color: #508bfc;">
+        <div class="row d-flex justify-content-center h-100">
+          <div class="col-12 col-md-10 col-lg-9 col-xl-7">
+            <div class="card shadow-2-strong my-4" style="border-radius: 1rem;">
+              <div class="card-body p-5 text-center">
+                <div class="content">
+                  <h1 class="text-center">Event Website Creator</h1>
+                  <hr class="my-4">
+                  <button id="btn-login" class="btn btn-primary mt-3 btn-lg btn-block" disabled="true"
+                    onclick="login()">Log in</button>
+                  <button id="btn-logout" class="btn btn-primary mt-3 btn-lg btn-block" disabled="true"
+                    onclick="logout()">Log out</button>
+                  <button id="reset" class="btn btn-danger mt-3 btn-lg btn-block"
+                    onclick="resetLocalStorage()">Reset</button>
+                  <div class="hidden mt-3" id="gated-content">
+                    <p>
+                      You're seeing this content because you're currently
+                      <strong>logged in</strong>.
+                    </p>
+                    <h2>Access Token:</h2>
+                    <div style="display: flex; gap: 8px; height: 30px;">
+                      <p id="ipt-access-token"
+                        style="white-space: nowrap; border: 1px solid #666; border-radius: 4px; padding: 2px 5px; overflow: hidden; margin: 0;">
+                      </p>
+                      <button class="btn btn-primary btn-sm" onclick="copyToClipboard('ipt-access-token')">Copy</button>
+                    </div>
+                    <br>
+                    <h2>User Profile:</h2>
+                    <ul id="ipt-user-profile"></ul>
+                    <!-- <pre id="ipt-user-profile"></pre> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script>
+      function copyToClipboard(elementId) {
+        var copyText = document.getElementById(elementId).textContent;
+        var tempInput = document.createElement("input");
+        tempInput.value = copyText;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+        alert("Copied to clipboard: " + copyText);
+      }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.min.js"></script>
+
   </body>
+
 </html>
