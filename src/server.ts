@@ -10,7 +10,7 @@ import { readFileSync } from "fs";
 import { resolvers } from "./resolvers.js";
 import { Db } from "mongodb";
 import { connectDB } from "./connect.js";
-import path from "path";
+import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -71,6 +71,8 @@ app.use(
     },
   })
 );
+app.use(express.static("public"));
+app.use("/styles", express.static(path.resolve(__dirname + "../public/styles")));
 
 app.get("/health", (req, res) => {
   res.status(200).send("OK");
