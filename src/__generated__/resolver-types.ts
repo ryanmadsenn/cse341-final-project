@@ -26,20 +26,26 @@ export type Event = {
   venue: Scalars['ID'];
 };
 
+export type InsertionResponse = {
+  __typename?: 'InsertionResponse';
+  acknowledged?: Maybe<Scalars['Boolean']>;
+  insertedId?: Maybe<Scalars['String']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
-  createEvent?: Maybe<Event>;
-  createUser?: Maybe<User>;
-  createVendor?: Maybe<Vendor>;
-  createVenue?: Maybe<Venue>;
+  createEvent?: Maybe<InsertionResponse>;
+  createUser?: Maybe<InsertionResponse>;
+  createVendor?: Maybe<InsertionResponse>;
+  createVenue?: Maybe<InsertionResponse>;
   deleteEvent?: Maybe<Event>;
   deleteUser?: Maybe<User>;
   deleteVendor?: Maybe<Vendor>;
   deleteVenue?: Maybe<Venue>;
-  updateEvent?: Maybe<Event>;
+  updateEvent?: Maybe<UpsertionResponse>;
   updateUser?: Maybe<User>;
-  updateVendor?: Maybe<Vendor>;
-  updateVenue?: Maybe<Venue>;
+  updateVendor?: Maybe<UpsertionResponse>;
+  updateVenue?: Maybe<UpsertionResponse>;
 };
 
 
@@ -115,13 +121,13 @@ export type MutationDeleteVenueArgs = {
 
 
 export type MutationUpdateEventArgs = {
-  datetime: Scalars['String'];
-  description: Scalars['String'];
+  datetime?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
-  title: Scalars['String'];
+  title?: InputMaybe<Scalars['String']>;
   users?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   vendors?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
-  venue: Scalars['ID'];
+  venue?: InputMaybe<Scalars['ID']>;
 };
 
 
@@ -204,6 +210,11 @@ export enum Role {
   Admin = 'ADMIN',
   User = 'USER'
 }
+
+export type UpsertionResponse = {
+  __typename?: 'UpsertionResponse';
+  acknowledged?: Maybe<Scalars['Boolean']>;
+};
 
 export type User = {
   __typename?: 'User';
@@ -328,14 +339,16 @@ export type ResolversTypes = {
   Event: ResolverTypeWrapper<Event>;
   String: ResolverTypeWrapper<Scalars['String']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
+  InsertionResponse: ResolverTypeWrapper<InsertionResponse>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   Role: Role;
+  UpsertionResponse: ResolverTypeWrapper<UpsertionResponse>;
   User: ResolverTypeWrapper<User>;
   Vendor: ResolverTypeWrapper<Vendor>;
   Venue: ResolverTypeWrapper<Venue>;
   AdditionalEntityFields: AdditionalEntityFields;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -343,13 +356,15 @@ export type ResolversParentTypes = {
   Event: Event;
   String: Scalars['String'];
   ID: Scalars['ID'];
+  InsertionResponse: InsertionResponse;
+  Boolean: Scalars['Boolean'];
   Mutation: {};
   Query: {};
+  UpsertionResponse: UpsertionResponse;
   User: User;
   Vendor: Vendor;
   Venue: Venue;
   AdditionalEntityFields: AdditionalEntityFields;
-  Boolean: Scalars['Boolean'];
 };
 
 export type UnionDirectiveArgs = {
@@ -410,19 +425,25 @@ export type EventResolvers<ContextType = Context, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type InsertionResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['InsertionResponse'] = ResolversParentTypes['InsertionResponse']> = {
+  acknowledged?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  insertedId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createEvent?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationCreateEventArgs, 'datetime' | 'description' | 'title' | 'venue'>>;
-  createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'email' | 'fname' | 'lname' | 'password' | 'phone' | 'role'>>;
-  createVendor?: Resolver<Maybe<ResolversTypes['Vendor']>, ParentType, ContextType, RequireFields<MutationCreateVendorArgs, 'address' | 'city' | 'country' | 'description' | 'email' | 'name' | 'phone' | 'state' | 'website' | 'zip'>>;
-  createVenue?: Resolver<Maybe<ResolversTypes['Venue']>, ParentType, ContextType, RequireFields<MutationCreateVenueArgs, 'address' | 'city' | 'country' | 'description' | 'email' | 'name' | 'phone' | 'state' | 'website' | 'zip'>>;
+  createEvent?: Resolver<Maybe<ResolversTypes['InsertionResponse']>, ParentType, ContextType, RequireFields<MutationCreateEventArgs, 'datetime' | 'description' | 'title' | 'venue'>>;
+  createUser?: Resolver<Maybe<ResolversTypes['InsertionResponse']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'email' | 'fname' | 'lname' | 'password' | 'phone' | 'role'>>;
+  createVendor?: Resolver<Maybe<ResolversTypes['InsertionResponse']>, ParentType, ContextType, RequireFields<MutationCreateVendorArgs, 'address' | 'city' | 'country' | 'description' | 'email' | 'name' | 'phone' | 'state' | 'website' | 'zip'>>;
+  createVenue?: Resolver<Maybe<ResolversTypes['InsertionResponse']>, ParentType, ContextType, RequireFields<MutationCreateVenueArgs, 'address' | 'city' | 'country' | 'description' | 'email' | 'name' | 'phone' | 'state' | 'website' | 'zip'>>;
   deleteEvent?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationDeleteEventArgs, 'id'>>;
   deleteUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
   deleteVendor?: Resolver<Maybe<ResolversTypes['Vendor']>, ParentType, ContextType, RequireFields<MutationDeleteVendorArgs, 'id'>>;
   deleteVenue?: Resolver<Maybe<ResolversTypes['Venue']>, ParentType, ContextType, RequireFields<MutationDeleteVenueArgs, 'id'>>;
-  updateEvent?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationUpdateEventArgs, 'datetime' | 'description' | 'id' | 'title' | 'venue'>>;
+  updateEvent?: Resolver<Maybe<ResolversTypes['UpsertionResponse']>, ParentType, ContextType, RequireFields<MutationUpdateEventArgs, 'id'>>;
   updateUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'email' | 'fname' | 'id' | 'lname' | 'password' | 'phone' | 'role'>>;
-  updateVendor?: Resolver<Maybe<ResolversTypes['Vendor']>, ParentType, ContextType, RequireFields<MutationUpdateVendorArgs, 'address' | 'city' | 'country' | 'description' | 'email' | 'id' | 'name' | 'phone' | 'state' | 'website' | 'zip'>>;
-  updateVenue?: Resolver<Maybe<ResolversTypes['Venue']>, ParentType, ContextType, RequireFields<MutationUpdateVenueArgs, 'address' | 'city' | 'country' | 'description' | 'email' | 'id' | 'name' | 'phone' | 'state' | 'website' | 'zip'>>;
+  updateVendor?: Resolver<Maybe<ResolversTypes['UpsertionResponse']>, ParentType, ContextType, RequireFields<MutationUpdateVendorArgs, 'address' | 'city' | 'country' | 'description' | 'email' | 'id' | 'name' | 'phone' | 'state' | 'website' | 'zip'>>;
+  updateVenue?: Resolver<Maybe<ResolversTypes['UpsertionResponse']>, ParentType, ContextType, RequireFields<MutationUpdateVenueArgs, 'address' | 'city' | 'country' | 'description' | 'email' | 'id' | 'name' | 'phone' | 'state' | 'website' | 'zip'>>;
 };
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
@@ -434,6 +455,11 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   vendors?: Resolver<Maybe<Array<Maybe<ResolversTypes['Vendor']>>>, ParentType, ContextType>;
   venue?: Resolver<Maybe<ResolversTypes['Venue']>, ParentType, ContextType, RequireFields<QueryVenueArgs, 'id'>>;
   venues?: Resolver<Maybe<Array<Maybe<ResolversTypes['Venue']>>>, ParentType, ContextType>;
+};
+
+export type UpsertionResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UpsertionResponse'] = ResolversParentTypes['UpsertionResponse']> = {
+  acknowledged?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -482,8 +508,10 @@ export type VenueResolvers<ContextType = Context, ParentType extends ResolversPa
 
 export type Resolvers<ContextType = Context> = {
   Event?: EventResolvers<ContextType>;
+  InsertionResponse?: InsertionResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  UpsertionResponse?: UpsertionResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   Vendor?: VendorResolvers<ContextType>;
   Venue?: VenueResolvers<ContextType>;

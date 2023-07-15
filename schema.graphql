@@ -54,6 +54,15 @@ type User {
   events: [Event]
 }
 
+type InsertionResponse {
+  acknowledged: Boolean
+  insertedId: String
+}
+
+type UpsertionResponse {
+  acknowledged: Boolean
+}
+
 type Query {
   events: [Event]
   event(id: ID!): Event
@@ -73,16 +82,16 @@ type Mutation {
     venue: ID!
     vendors: [ID]
     users: [ID]
-  ): Event
+  ): InsertionResponse
   updateEvent(
     id: ID!
-    title: String!
-    description: String!
-    datetime: String!
-    venue: ID!
+    title: String
+    description: String
+    datetime: String
+    venue: ID
     vendors: [ID]
     users: [ID]
-  ): Event
+  ): UpsertionResponse
   deleteEvent(id: ID!): Event
   createVendor(
     name: String!
@@ -96,7 +105,7 @@ type Mutation {
     country: String!
     website: String!
     events: [ID]
-  ): Vendor
+  ): InsertionResponse
   updateVendor(
     id: ID!
     name: String!
@@ -110,7 +119,7 @@ type Mutation {
     country: String!
     website: String!
     events: [ID]
-  ): Vendor
+  ): UpsertionResponse
   deleteVendor(id: ID!): Vendor
   createVenue(
     name: String!
@@ -124,7 +133,7 @@ type Mutation {
     country: String!
     website: String!
     events: [ID]
-  ): Venue
+  ): InsertionResponse
   updateVenue(
     id: ID!
     name: String!
@@ -138,7 +147,7 @@ type Mutation {
     country: String!
     website: String!
     events: [ID]
-  ): Venue
+  ): UpsertionResponse
   deleteVenue(id: ID!): Venue
   createUser(
     role: Role!
@@ -148,7 +157,7 @@ type Mutation {
     email: String!
     password: String!
     events: [ID]
-  ): User
+  ): InsertionResponse
   updateUser(
     id: ID!
     role: Role!
