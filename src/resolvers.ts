@@ -4,7 +4,6 @@ import {
   Vendor,
   Venue,
   User,
-  Role,
 } from "./__generated__/resolver-types.js";
 import { EventModel, UserModel, VendorModel, VenueModel } from "./db.js";
 import { Context } from "./server";
@@ -56,18 +55,237 @@ export const resolvers: Resolvers = {
 
       return formattedEvents as Event[];
     },
+    event: async (_, args, { dataSources }) => {
+      const { id } = args;
+
+      const event = await dataSources.db
+        .collection<Event>("events")
+        .aggregate([
+          { $match: { _id: new ObjectId(id) } },
+          {
+            $lookup: {
+              from: "users",
+              localField: "users",
+              foreignField: "_id",
+              as: "users",
+            },
+          },
+          {
+            $lookup: {
+              from: "vendors",
+              localField: "vendors",
+              foreignField: "_id",
+              as: "vendors",
+            },
+          },
+        ])
+        .toArray();
+
+      if (!event.length) {
+        throw new Error(`Event with ID ${id} not found`);
+      }
+
+      const formattedEvent = {
+        ...event[0],
+        id: String(event[0]._id),
+        users: event[0].users.map((user: UserModel) => {
+          return {
+            ...user,
+            id: String(user._id),
+          };
+        }),
+        vendors: event[0].vendors.map((vendor: VendorModel) => {
+          return {
+            ...vendor,
+            id: String(vendor._id),
+          };
+        }),
+      };
+
+      return formattedEvent as Event;
+    },
+    vendors: async (_, __, { dataSources }) => {
+      const vendors = await dataSources.db
+        .collection("vendors")
+        .aggregate([
+          {
+            $lookup: {
+              from: "events",
+              localField: "events",
+              foreignField: "_id",
+              as: "events",
+            },
+          },
+        ])
+        .toArray();
+
+      const formattedVendors = vendors.map((vendor) => {
+        return {
+          ...vendor,
+          id: String(vendor._id),
+          events: vendor.events.map((event: EventModel) => {
+            return {
+              ...event,
+              id: String(event._id),
+            };
+          }),
+        };
+      });
+
+      return formattedVendors as Vendor[];
+    },
+    vendor: async (_, args, { dataSources }) => {
+      const { id } = args;
+
+      const vendor = await dataSources.db
+        .collection<Vendor>("vendors")
+        .aggregate([
+          { $match: { _id: new ObjectId(id) } },
+          {
+            $lookup: {
+              from: "events",
+              localField: "events",
+              foreignField: "_id",
+              as: "events",
+            },
+          },
+        ])
+        .toArray();
+
+      if (!vendor.length) {
+        throw new Error(`Vendor with ID ${id} not found`);
+      }
+
+      const formattedVendor = {
+        ...vendor[0],
+        id: String(vendor[0]._id),
+        events: vendor[0].events.map((event: EventModel) => {
+          return {
+            ...event,
+            id: String(event._id),
+          };
+        }),
+      };
+
+      return formattedVendor as Vendor;
+    },
+    venues: async (_, __, { dataSources }) => {
+      const venues = await dataSources.db
+        .collection("venues")
+        .aggregate([
+          {
+            $lookup: {
+              from: "events",
+              localField: "events",
+              foreignField: "_id",
+              as: "events",
+            },
+          },
+        ])
+        .toArray();
+
+      const formattedVenues = venues.map((venue) => {
+        return {
+          ...venue,
+          id: String(venue._id),
+          events: venue.events.map((event: EventModel) => {
+            return {
+              ...event,
+              id: String(event._id),
+            };
+          }),
+        };
+      });
+
+      return formattedVenues as Venue[];
+    },
+    venue: async (_, args, { dataSources }) => {
+      const { id } = args;
+
+      const venue = await dataSources.db
+        .collection<Venue>("venues")
+        .aggregate([
+          { $match: { _id: new ObjectId(id) } },
+          {
+            $lookup: {
+              from: "events",
+              localField: "events",
+              foreignField: "_id",
+              as: "events",
+            },
+          },
+        ])
+        .toArray();
+
+      if (!venue.length) {
+        throw new Error(`Venue with ID ${id} not found`);
+      }
+
+      const formattedVenue = {
+        ...venue[0],
+        id: String(venue[0]._id),
+        events: venue[0].events.map((event: EventModel) => {
+          return {
+            ...event,
+            id: String(event._id),
+          };
+        }),
+      };
+
+      return formattedVenue as Venue;
+    },
+    users: async (_, __, { dataSources }) => {
+      const users = await dataSources.db
+        .collection("users")
+        .aggregate([
+          {
+            $lookup: {
+              from: "events",
+              localField: "events",
+              foreignField: "_id",
+              as: "events",
+            },
+          },
+        ])
+        .toArray();
+
+      const formattedUsers = users.map((user) => {
+        return {
+          ...user,
+          id: String(user._id),
+        };
+      });
+
+      return formattedUsers as User[];
+    },
     user: async (_, args, { dataSources }) => {
       const { id } = args;
 
       const user = await dataSources.db
         .collection<User>("users")
-        .findOne({ _id: new ObjectId(id) });
+        .aggregate([
+          { $match: { _id: new ObjectId(id) } },
+          {
+            $lookup: {
+              from: "events",
+              localField: "events",
+              foreignField: "_id",
+              as: "events",
+            },
+          },
+        ])
+        .toArray();
 
-      if (!user) {
+      if (!user.length) {
         throw new Error(`User with ID ${id} not found`);
       }
 
-      return user;
+      const formattedUser = {
+        ...user[0],
+        id: String(user[0]._id),
+      };
+
+      return formattedUser as User;
     },
   },
   Mutation: {
