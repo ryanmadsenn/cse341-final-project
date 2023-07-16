@@ -335,6 +335,11 @@ export const resolvers: Resolvers = {
                   ? vendors?.map((vendorId) => new ObjectId(vendorId ?? ""))
                   : eventToUpdate.vendors,
               },
+              users: {
+                $each: users?.length
+                  ? users?.map((userId) => new ObjectId(userId ?? ""))
+                  : eventToUpdate.users,
+              },
             },
           }
         );
