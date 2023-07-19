@@ -6,7 +6,7 @@ import {
   User,
 } from "./__generated__/resolver-types.js";
 import { EventModel, UserModel, VendorModel, VenueModel } from "./db.js";
-import { Context } from "./server";
+import { Context } from "./server.js";
 import { ObjectId } from "mongodb";
 
 export const resolvers: Resolvers = {
@@ -15,6 +15,20 @@ export const resolvers: Resolvers = {
       const events = await dataSources.db
         .collection("events")
         .aggregate([
+          {
+            $lookup: {
+              from: "venues",
+              localField: "venue",
+              foreignField: "_id",
+              as: "venue",
+            },
+          },
+          {
+            $unwind: {
+              path: "$venue",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
           {
             $lookup: {
               from: "users",
@@ -50,6 +64,10 @@ export const resolvers: Resolvers = {
               id: String(vendor._id),
             };
           }),
+          venue: event.venue && {
+            ...event.venue,
+            id: String(event.venue._id),
+          },
         };
       });
 
@@ -62,6 +80,20 @@ export const resolvers: Resolvers = {
         .collection<Event>("events")
         .aggregate([
           { $match: { _id: new ObjectId(id) } },
+          {
+            $lookup: {
+              from: "venues",
+              localField: "venue",
+              foreignField: "_id",
+              as: "venue",
+            },
+          },
+          {
+            $unwind: {
+              path: "$venue",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
           {
             $lookup: {
               from: "users",
@@ -100,6 +132,10 @@ export const resolvers: Resolvers = {
             id: String(vendor._id),
           };
         }),
+        venue: event[0].venue && {
+          ...event[0].venue,
+          id: String(event[0].venue._id),
+        },
       };
 
       return formattedEvent as Event;
@@ -290,13 +326,92 @@ export const resolvers: Resolvers = {
   },
   Mutation: {
     createEvent: async (_, args, context: Context) => {
+      const { title, description, datetime, venue, vendors, users } = args;
+
       // Insert event into the database.
       const { acknowledged, insertedId } = await context.dataSources.db
         .collection("events")
-        .insertOne(args);
+        .insertOne({
+          title,
+          description,
+          datetime,
+          venue: venue ? new ObjectId(venue) : null,
+          vendors: vendors?.map((vendorId) => new ObjectId(vendorId as string)),
+          users: users?.map((userId) => new ObjectId(userId as string)),
+        });
 
       if (!acknowledged) {
         throw new Error("Unable to insert event");
+      }
+
+      if (venue) {
+        const { acknowledged: venueAcknowledged } = await context.dataSources.db
+          .collection("venues")
+          .updateOne(
+            { _id: new ObjectId(venue) },
+            {
+              $addToSet: {
+                events: {
+                  $each: [insertedId],
+                },
+              },
+            }
+          );
+
+        if (!venueAcknowledged) {
+          throw new Error("Unable to update venue");
+        }
+      }
+
+      if (vendors?.length) {
+        const vendorUpdate: any = {
+          $addToSet: {
+            events: {
+              $each: [insertedId],
+            },
+          },
+        };
+
+        // Update vendors to include event.
+        const { acknowledged: vendorAcknowledged } =
+          await context.dataSources.db.collection("vendors").updateMany(
+            {
+              _id: {
+                $in: vendors?.map((vendorId) => new ObjectId(vendorId ?? "")),
+              },
+            },
+            vendorUpdate
+          );
+
+        if (!vendorAcknowledged) {
+          throw new Error("Unable to update vendors");
+        }
+      }
+
+      if (users?.length) {
+        const userUpdate: any = {
+          $addToSet: {
+            events: {
+              $each: [insertedId],
+            },
+          },
+        };
+
+        // Update users to include event.
+        const { acknowledged: userAcknowledged } = await context.dataSources.db
+          .collection("users")
+          .updateMany(
+            {
+              _id: {
+                $in: users?.map((userId) => new ObjectId(userId ?? "")),
+              },
+            },
+            userUpdate
+          );
+
+        if (!userAcknowledged) {
+          throw new Error("Unable to update users");
+        }
       }
 
       return {
@@ -333,12 +448,12 @@ export const resolvers: Resolvers = {
               vendors: {
                 $each: vendors?.length
                   ? vendors?.map((vendorId) => new ObjectId(vendorId ?? ""))
-                  : eventToUpdate.vendors,
+                  : eventToUpdate.vendors ?? [],
               },
               users: {
                 $each: users?.length
                   ? users?.map((userId) => new ObjectId(userId ?? ""))
-                  : eventToUpdate.users,
+                  : eventToUpdate.users ?? [],
               },
             },
           }
@@ -348,6 +463,79 @@ export const resolvers: Resolvers = {
         throw new Error("Unable to update event");
       }
 
+      if (venue) {
+        const { acknowledged: venueAcknowledged } = await dataSources.db
+          .collection("venues")
+          .updateOne(
+            { _id: new ObjectId(venue ?? "") },
+            {
+              $addToSet: {
+                events: {
+                  $each: [new ObjectId(id)],
+                },
+              },
+            }
+          );
+
+        if (!venueAcknowledged) {
+          throw new Error("Unable to update venue");
+        }
+      }
+
+      if (vendors?.length) {
+        const vendorUpdate: any = {
+          $addToSet: {
+            events: {
+              $each: [new ObjectId(id)],
+            },
+          },
+        };
+
+        // Update vendors to include event.
+        const { acknowledged: vendorAcknowledged } = await dataSources.db
+          .collection("vendors")
+          .updateMany(
+            {
+              _id: {
+                $in: vendors?.map(
+                  (vendorId) => new ObjectId(vendorId as string)
+                ),
+              },
+            },
+            vendorUpdate
+          );
+
+        if (!vendorAcknowledged) {
+          throw new Error("Unable to update vendors");
+        }
+      }
+
+      if (users?.length) {
+        const userUpdate: any = {
+          $addToSet: {
+            events: {
+              $each: [new ObjectId(id)],
+            },
+          },
+        };
+
+        // Update users to include event.
+        const { acknowledged: userAcknowledged } = await dataSources.db
+          .collection("users")
+          .updateMany(
+            {
+              _id: {
+                $in: users?.map((userId) => new ObjectId(userId as string)),
+              },
+            },
+            userUpdate
+          );
+
+        if (!userAcknowledged) {
+          throw new Error("Unable to update users");
+        }
+      }
+
       return {
         acknowledged,
       };
@@ -355,27 +543,123 @@ export const resolvers: Resolvers = {
     deleteEvent: async (_, args, { dataSources }) => {
       const { id } = args;
 
-      const eventToDelete = await dataSources.db
-        .collection<Event>("events")
-        .findOne({ _id: new ObjectId(id) });
-      if (!eventToDelete) {
-        throw new Error(`Event with ID ${id} not found`);
-      }
-
-      await dataSources.db
+      const { acknowledged } = await dataSources.db
         .collection<Event>("events")
         .deleteOne({ _id: new ObjectId(id) });
 
-      return eventToDelete;
+      if (!acknowledged) {
+        throw new Error(`Event with ID ${id} not found`);
+      }
+
+      const venueDelete: any = {
+        $pull: {
+          events: new ObjectId(id),
+        },
+      };
+
+      // Delete event id from venues.
+      const { acknowledged: venueAcknowledged } = await dataSources.db
+        .collection("venues")
+        .updateMany({ events: new ObjectId(id) }, venueDelete);
+
+      if (!venueAcknowledged) {
+        throw new Error("Unable to update venues");
+      }
+
+      const vendorDelete: any = {
+        $pull: {
+          events: new ObjectId(id),
+        },
+      };
+
+      // Delete event id from vendors.
+      const { acknowledged: vendorAcknowledged } = await dataSources.db
+        .collection("vendors")
+        .updateMany({ events: new ObjectId(id) }, vendorDelete);
+
+      if (!vendorAcknowledged) {
+        throw new Error("Unable to update vendors");
+      }
+
+      const userDelete: any = {
+        $pull: {
+          events: new ObjectId(id),
+        },
+      };
+
+      // Delete event id from users.
+      const { acknowledged: userAcknowledged } = await dataSources.db
+        .collection("users")
+        .updateMany({ events: new ObjectId(id) }, userDelete);
+
+      if (!userAcknowledged) {
+        throw new Error("Unable to update users");
+      }
+
+      return {
+        acknowledged,
+      };
     },
     createVendor: async (_, args, { dataSources }) => {
-      // Insert vendor into the database.
+      const {
+        name,
+        description,
+        phone,
+        email,
+        address,
+        city,
+        state,
+        zip,
+        country,
+        website,
+        events,
+      } = args;
+
+      // Insert vendor to the database.
       const { acknowledged, insertedId } = await dataSources.db
         .collection("vendors")
-        .insertOne(args);
+        .insertOne({
+          name,
+          description,
+          phone,
+          email,
+          address,
+          city,
+          state,
+          zip,
+          country,
+          website,
+          events: events?.map((eventId) => new ObjectId(eventId as string)),
+        });
 
       if (!acknowledged) {
         throw new Error("Unable to insert vendor");
+      }
+
+      if (events?.length) {
+        const eventUpdate: any = {
+          $addToSet: {
+            vendors: {
+              $each: [insertedId],
+            },
+          },
+        };
+
+        // Update events to include vendor.
+        const { acknowledged: eventAcknowledged } = await dataSources.db
+          .collection("events")
+          .updateMany(
+            {
+              _id: {
+                $in: events?.map((eventId) => new ObjectId(eventId as string)),
+              },
+            },
+            eventUpdate
+          );
+
+        if (!eventAcknowledged) {
+          throw new Error("Unable to update events");
+        }
       }
 
       return {
@@ -425,13 +709,39 @@ export const resolvers: Resolvers = {
               website: website ?? eventToUpdate.website,
             },
             $addToSet: {
-              events: { $each: events ?? eventToUpdate.events },
+              events: { $each: events ?? eventToUpdate.events ?? [] },
             },
           }
         );
 
       if (!acknowledged) {
         throw new Error("Unable to update vendor");
+      }
+
+      if (events?.length) {
+        const eventUpdate: any = {
+          $addToSet: {
+            vendors: {
+              $each: [new ObjectId(id)],
+            },
+          },
+        };
+
+        // Update events to include vendor.
+        const { acknowledged: eventAcknowledged } = await dataSources.db
+          .collection("events")
+          .updateMany(
+            {
+              _id: {
+                $in: events?.map((eventId) => new ObjectId(eventId as string)),
+              },
+            },
+            eventUpdate
+          );
+
+        if (!eventAcknowledged) {
+          throw new Error("Unable to update events");
+        }
       }
 
       return {
@@ -441,29 +751,93 @@ export const resolvers: Resolvers = {
     deleteVendor: async (_, args, context: Context) => {
       const { id } = args;
 
-      const vendorId = new ObjectId(id);
-
-      const vendorToDelete = await context.dataSources.db
+      const { acknowledged } = await context.dataSources.db
         .collection<Vendor>("vendors")
-        .findOne({ _id: vendorId });
-      if (!vendorToDelete) {
+        .deleteOne({ _id: new ObjectId(id) });
+
+      if (!acknowledged) {
         throw new Error(`Vendor with ID ${id} not found`);
       }
 
-      context.dataSources.db
-        .collection<Vendor>("vendors")
-        .deleteOne({ _id: vendorId });
+      const eventDelete: any = {
+        $pull: {
+          vendors: new ObjectId(id),
+        },
+      };
 
-      return vendorToDelete;
+      // Delete vendor id from events.
+      const { acknowledged: eventAcknowledged } = await context.dataSources.db
+        .collection("events")
+        .updateMany({ vendors: new ObjectId(id) }, eventDelete);
+
+      if (!eventAcknowledged) {
+        throw new Error("Unable to update events");
+      }
+
+      return {
+        acknowledged,
+      };
     },
     createVenue: async (_, args, { dataSources }) => {
+      const {
+        name,
+        description,
+        phone,
+        email,
+        address,
+        city,
+        state,
+        zip,
+        country,
+        website,
+        events,
+      } = args;
+
       // Insert venue to the database.
       const { acknowledged, insertedId } = await dataSources.db
-        .collection<Venue>("venues")
-        .insertOne(args as Venue);
+        .collection("venues")
+        .insertOne({
+          name,
+          description,
+          phone,
+          email,
+          address,
+          city,
+          state,
+          zip,
+          country,
+          website,
+          events: events?.map((eventId) => new ObjectId(eventId as string)),
+        });
 
       if (!acknowledged) {
         throw new Error("Unable to insert venue");
+      }
+
+      if (events?.length) {
+        const eventUpdate: any = {
+          $addToSet: {
+            venues: {
+              $each: [insertedId],
+            },
+          },
+        };
+
+        // Update events to include venue.
+        const { acknowledged: eventAcknowledged } = await dataSources.db
+          .collection("events")
+          .updateMany(
+            {
+              _id: {
+                $in: events?.map((eventId) => new ObjectId(eventId as string)),
+              },
+            },
+            eventUpdate
+          );
+
+        if (!eventAcknowledged) {
+          throw new Error("Unable to update events");
+        }
       }
 
       return {
@@ -522,6 +896,32 @@ export const resolvers: Resolvers = {
         throw new Error("Unable to update venue");
       }
 
+      if (events?.length) {
+        const eventUpdate: any = {
+          $addToSet: {
+            venues: {
+              $each: [new ObjectId(id)],
+            },
+          },
+        };
+
+        // Update events to include venue.
+        const { acknowledged: eventAcknowledged } = await dataSources.db
+          .collection("events")
+          .updateMany(
+            {
+              _id: {
+                $in: events?.map((eventId) => new ObjectId(eventId as string)),
+              },
+            },
+            eventUpdate
+          );
+
+        if (!eventAcknowledged) {
+          throw new Error("Unable to update events");
+        }
+      }
+
       return {
         acknowledged,
       };
@@ -529,62 +929,141 @@ export const resolvers: Resolvers = {
     deleteVenue: async (_, args, { dataSources }) => {
       const { id } = args;
 
-      const venueToDelete = await dataSources.db
-        .collection<Venue>("venues")
-        .findOne({ _id: new ObjectId(id) });
-      if (!venueToDelete) {
-        throw new Error(`Venue with ID ${id} not found`);
-      }
-
-      await dataSources.db
+      const { acknowledged } = await dataSources.db
         .collection<Venue>("venues")
         .deleteOne({ _id: new ObjectId(id) });
 
-      return venueToDelete;
+      if (!acknowledged) {
+        throw new Error(`Venue with ID ${id} not found`);
+      }
+
+      const eventDelete: any = {
+        $pull: {
+          venues: new ObjectId(id),
+        },
+      };
+
+      // Delete venue id from events.
+      const { acknowledged: eventAcknowledged } = await dataSources.db
+        .collection("events")
+        .updateMany({ venues: new ObjectId(id) }, eventDelete);
+
+      if (!eventAcknowledged) {
+        throw new Error("Unable to update events");
+      }
+
+      return {
+        acknowledged,
+      };
     },
     createUser: async (_, args, { dataSources }) => {
-      // Implement the logic to create a new user
-      // Save the new user to the database
+      const { events } = args;
+
       const { acknowledged, insertedId } = await dataSources.db
         .collection("users")
-        .insertOne(args);
+        .insertOne({
+          ...args,
+          events: events?.map((eventId) => new ObjectId(eventId as string)),
+        });
+
       return {
         acknowledged,
         insertedId: String(insertedId),
       };
     },
     updateUser: async (_, args, { dataSources }) => {
-      const { id, ...updateData } = args;
+      const { id, role, fname, lname, phone, email, password, events } = args;
 
-      await dataSources.db
-        .collection<User>("users")
-        .updateOne({ _id: new ObjectId(id) }, { $set: { updateData } });
-
-      const updatedUser = await dataSources.db
-        .collection<User>("users")
+      const userToUpdate = await dataSources.db
+        .collection<UserModel>("users")
         .findOne({ _id: new ObjectId(id) });
 
-      if (!updatedUser) {
+      if (!userToUpdate) {
         throw new Error(`User with ID ${id} not found`);
       }
 
-      return updatedUser;
+      const { acknowledged } = await dataSources.db
+        .collection("users")
+        .updateOne(
+          { _id: new ObjectId(id) },
+          {
+            $set: {
+              role: role ?? userToUpdate.role,
+              fname: fname ?? userToUpdate.fname,
+              lname: lname ?? userToUpdate.lname,
+              phone: phone ?? userToUpdate.phone,
+              email: email ?? userToUpdate.email,
+              password: password ?? userToUpdate.password,
+            },
+            $addToSet: {
+              events: { $each: events ?? userToUpdate.events ?? [] },
+            },
+          }
+        );
+
+      if (!acknowledged) {
+        throw new Error("Unable to update user");
+      }
+
+      if (events?.length) {
+        const eventUpdate: any = {
+          $addToSet: {
+            users: {
+              $each: [new ObjectId(id)],
+            },
+          },
+        };
+
+        // Update events to include user.
+        const { acknowledged: eventAcknowledged } = await dataSources.db
+          .collection("events")
+          .updateMany(
+            {
+              _id: {
+                $in: events?.map((eventId) => new ObjectId(eventId as string)),
+              },
+            },
+            eventUpdate
+          );
+
+        if (!eventAcknowledged) {
+          throw new Error("Unable to update events");
+        }
+      }
+
+      return {
+        acknowledged,
+      };
     },
     deleteUser: async (_, args, { dataSources }) => {
       const { id } = args;
 
-      const userToDelete = await dataSources.db
-        .collection<User>("users")
-        .findOne({ _id: new ObjectId(id) });
-      if (!userToDelete) {
-        throw new Error(`User with ID ${id} not found`);
-      }
-
-      await dataSources.db
+      const { acknowledged } = await dataSources.db
         .collection<User>("users")
         .deleteOne({ _id: new ObjectId(id) });
 
-      return userToDelete;
+      if (!acknowledged) {
+        throw new Error(`User with ID ${id} not found`);
+      }
+
+      const eventDelete: any = {
+        $pull: {
+          users: new ObjectId(id),
+        },
+      };
+
+      // Delete user id from events.
+      const { acknowledged: eventAcknowledged } = await dataSources.db
+        .collection("events")
+        .updateMany({ users: new ObjectId(id) }, eventDelete);
+
+      if (!eventAcknowledged) {
+        throw new Error("Unable to update events");
+      }
+
+      return {
+        acknowledged,
+      };
     },
   },
 };

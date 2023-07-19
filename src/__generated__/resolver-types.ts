@@ -15,15 +15,20 @@ export type Scalars = {
   Float: number;
 };
 
+export type DeletionResponse = {
+  __typename?: 'DeletionResponse';
+  acknowledged?: Maybe<Scalars['Boolean']>;
+};
+
 export type Event = {
   __typename?: 'Event';
-  datetime: Scalars['String'];
-  description: Scalars['String'];
-  id: Scalars['ID'];
-  title: Scalars['String'];
+  datetime?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['ID']>;
+  title?: Maybe<Scalars['String']>;
   users?: Maybe<Array<Maybe<User>>>;
   vendors?: Maybe<Array<Maybe<Vendor>>>;
-  venue: Scalars['ID'];
+  venue?: Maybe<Venue>;
 };
 
 export type InsertionResponse = {
@@ -38,12 +43,12 @@ export type Mutation = {
   createUser?: Maybe<InsertionResponse>;
   createVendor?: Maybe<InsertionResponse>;
   createVenue?: Maybe<InsertionResponse>;
-  deleteEvent?: Maybe<Event>;
-  deleteUser?: Maybe<User>;
-  deleteVendor?: Maybe<Vendor>;
-  deleteVenue?: Maybe<Venue>;
+  deleteEvent?: Maybe<DeletionResponse>;
+  deleteUser?: Maybe<DeletionResponse>;
+  deleteVendor?: Maybe<DeletionResponse>;
+  deleteVenue?: Maybe<DeletionResponse>;
   updateEvent?: Maybe<UpsertionResponse>;
-  updateUser?: Maybe<User>;
+  updateUser?: Maybe<UpsertionResponse>;
   updateVendor?: Maybe<UpsertionResponse>;
   updateVenue?: Maybe<UpsertionResponse>;
 };
@@ -230,34 +235,34 @@ export type User = {
 
 export type Vendor = {
   __typename?: 'Vendor';
-  address: Scalars['String'];
-  city: Scalars['String'];
-  country: Scalars['String'];
-  description: Scalars['String'];
-  email: Scalars['String'];
+  address?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   events?: Maybe<Array<Maybe<Event>>>;
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  phone: Scalars['String'];
-  state: Scalars['String'];
-  website: Scalars['String'];
-  zip: Scalars['String'];
+  id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  state?: Maybe<Scalars['String']>;
+  website?: Maybe<Scalars['String']>;
+  zip?: Maybe<Scalars['String']>;
 };
 
 export type Venue = {
   __typename?: 'Venue';
-  address: Scalars['String'];
-  city: Scalars['String'];
-  country: Scalars['String'];
-  description: Scalars['String'];
-  email: Scalars['String'];
+  address?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   events?: Maybe<Array<Maybe<Event>>>;
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  phone: Scalars['String'];
-  state: Scalars['String'];
-  website: Scalars['String'];
-  zip: Scalars['String'];
+  id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  state?: Maybe<Scalars['String']>;
+  website?: Maybe<Scalars['String']>;
+  zip?: Maybe<Scalars['String']>;
 };
 
 export type AdditionalEntityFields = {
@@ -336,11 +341,12 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  DeletionResponse: ResolverTypeWrapper<DeletionResponse>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Event: ResolverTypeWrapper<Event>;
   String: ResolverTypeWrapper<Scalars['String']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   InsertionResponse: ResolverTypeWrapper<InsertionResponse>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   Role: Role;
@@ -353,11 +359,12 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  DeletionResponse: DeletionResponse;
+  Boolean: Scalars['Boolean'];
   Event: Event;
   String: Scalars['String'];
   ID: Scalars['ID'];
   InsertionResponse: InsertionResponse;
-  Boolean: Scalars['Boolean'];
   Mutation: {};
   Query: {};
   UpsertionResponse: UpsertionResponse;
@@ -414,14 +421,19 @@ export type MapDirectiveArgs = {
 
 export type MapDirectiveResolver<Result, Parent, ContextType = Context, Args = MapDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
+export type DeletionResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['DeletionResponse'] = ResolversParentTypes['DeletionResponse']> = {
+  acknowledged?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type EventResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event']> = {
-  datetime?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  datetime?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
   vendors?: Resolver<Maybe<Array<Maybe<ResolversTypes['Vendor']>>>, ParentType, ContextType>;
-  venue?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  venue?: Resolver<Maybe<ResolversTypes['Venue']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -436,12 +448,12 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   createUser?: Resolver<Maybe<ResolversTypes['InsertionResponse']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'email' | 'fname' | 'lname' | 'password' | 'phone' | 'role'>>;
   createVendor?: Resolver<Maybe<ResolversTypes['InsertionResponse']>, ParentType, ContextType, RequireFields<MutationCreateVendorArgs, 'address' | 'city' | 'country' | 'description' | 'email' | 'name' | 'phone' | 'state' | 'website' | 'zip'>>;
   createVenue?: Resolver<Maybe<ResolversTypes['InsertionResponse']>, ParentType, ContextType, RequireFields<MutationCreateVenueArgs, 'address' | 'city' | 'country' | 'description' | 'email' | 'name' | 'phone' | 'state' | 'website' | 'zip'>>;
-  deleteEvent?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationDeleteEventArgs, 'id'>>;
-  deleteUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
-  deleteVendor?: Resolver<Maybe<ResolversTypes['Vendor']>, ParentType, ContextType, RequireFields<MutationDeleteVendorArgs, 'id'>>;
-  deleteVenue?: Resolver<Maybe<ResolversTypes['Venue']>, ParentType, ContextType, RequireFields<MutationDeleteVenueArgs, 'id'>>;
+  deleteEvent?: Resolver<Maybe<ResolversTypes['DeletionResponse']>, ParentType, ContextType, RequireFields<MutationDeleteEventArgs, 'id'>>;
+  deleteUser?: Resolver<Maybe<ResolversTypes['DeletionResponse']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
+  deleteVendor?: Resolver<Maybe<ResolversTypes['DeletionResponse']>, ParentType, ContextType, RequireFields<MutationDeleteVendorArgs, 'id'>>;
+  deleteVenue?: Resolver<Maybe<ResolversTypes['DeletionResponse']>, ParentType, ContextType, RequireFields<MutationDeleteVenueArgs, 'id'>>;
   updateEvent?: Resolver<Maybe<ResolversTypes['UpsertionResponse']>, ParentType, ContextType, RequireFields<MutationUpdateEventArgs, 'id'>>;
-  updateUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'email' | 'fname' | 'id' | 'lname' | 'password' | 'phone' | 'role'>>;
+  updateUser?: Resolver<Maybe<ResolversTypes['UpsertionResponse']>, ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'email' | 'fname' | 'id' | 'lname' | 'password' | 'phone' | 'role'>>;
   updateVendor?: Resolver<Maybe<ResolversTypes['UpsertionResponse']>, ParentType, ContextType, RequireFields<MutationUpdateVendorArgs, 'address' | 'city' | 'country' | 'description' | 'email' | 'id' | 'name' | 'phone' | 'state' | 'website' | 'zip'>>;
   updateVenue?: Resolver<Maybe<ResolversTypes['UpsertionResponse']>, ParentType, ContextType, RequireFields<MutationUpdateVenueArgs, 'address' | 'city' | 'country' | 'description' | 'email' | 'id' | 'name' | 'phone' | 'state' | 'website' | 'zip'>>;
 };
@@ -475,38 +487,39 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
 };
 
 export type VendorResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Vendor'] = ResolversParentTypes['Vendor']> = {
-  address?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  city?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  country?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   events?: Resolver<Maybe<Array<Maybe<ResolversTypes['Event']>>>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  phone?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  state?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  website?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  zip?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  state?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  website?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  zip?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type VenueResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Venue'] = ResolversParentTypes['Venue']> = {
-  address?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  city?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  country?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   events?: Resolver<Maybe<Array<Maybe<ResolversTypes['Event']>>>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  phone?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  state?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  website?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  zip?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  state?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  website?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  zip?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = Context> = {
+  DeletionResponse?: DeletionResponseResolvers<ContextType>;
   Event?: EventResolvers<ContextType>;
   InsertionResponse?: InsertionResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;

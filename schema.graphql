@@ -1,40 +1,40 @@
 type Event {
-  id: ID!
-  title: String!
-  description: String!
-  datetime: String!
-  venue: ID!
+  id: ID
+  title: String
+  description: String
+  datetime: String
+  venue: Venue
   vendors: [Vendor]
   users: [User]
 }
 
 type Vendor {
-  id: ID!
-  name: String!
-  description: String!
-  phone: String!
-  email: String!
-  address: String!
-  city: String!
-  state: String!
-  zip: String!
-  country: String!
-  website: String!
+  id: ID
+  name: String
+  description: String
+  phone: String
+  email: String
+  address: String
+  city: String
+  state: String
+  zip: String
+  country: String
+  website: String
   events: [Event]
 }
 
 type Venue {
-  id: ID!
-  name: String!
-  description: String!
-  phone: String!
-  email: String!
-  address: String!
-  city: String!
-  state: String!
-  zip: String!
-  country: String!
-  website: String!
+  id: ID
+  name: String
+  description: String
+  phone: String
+  email: String
+  address: String
+  city: String
+  state: String
+  zip: String
+  country: String
+  website: String
   events: [Event]
 }
 
@@ -60,6 +60,10 @@ type InsertionResponse {
 }
 
 type UpsertionResponse {
+  acknowledged: Boolean
+}
+
+type DeletionResponse {
   acknowledged: Boolean
 }
 
@@ -92,7 +96,7 @@ type Mutation {
     vendors: [ID]
     users: [ID]
   ): UpsertionResponse
-  deleteEvent(id: ID!): Event
+  deleteEvent(id: ID!): DeletionResponse
   createVendor(
     name: String!
     description: String!
@@ -120,7 +124,7 @@ type Mutation {
     website: String!
     events: [ID]
   ): UpsertionResponse
-  deleteVendor(id: ID!): Vendor
+  deleteVendor(id: ID!): DeletionResponse
   createVenue(
     name: String!
     description: String!
@@ -148,7 +152,7 @@ type Mutation {
     website: String!
     events: [ID]
   ): UpsertionResponse
-  deleteVenue(id: ID!): Venue
+  deleteVenue(id: ID!): DeletionResponse
   createUser(
     role: Role!
     fname: String!
@@ -167,6 +171,6 @@ type Mutation {
     email: String!
     password: String!
     events: [ID]
-  ): User
-  deleteUser(id: ID!): User
+  ): UpsertionResponse
+  deleteUser(id: ID!): DeletionResponse
 }
