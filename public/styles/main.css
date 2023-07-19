@@ -1,9 +1,14 @@
 main {
-    background-color: #508bfc;
-    height: 100vh;
-    overflow: auto;
+  background-color: #508bfc;
+  height: 100vh;
+  overflow: auto;
 }
 
-#main-container{
-    
+.hidden {
+  display: none;
+}
+
+label {
+  margin-bottom: 10px;
+  display: block;
 }
