@@ -19,9 +19,9 @@ const queryGraphQL = async (query, variables) => {
 };
 
 const main = async () => {
-  const events = await queryGraphQL(
-    `{
-        events {
+  const event = await queryGraphQL(
+    `query GetEvent($eventId: ID!) {
+        event(id: $eventId) {
           id
           title
           description
@@ -31,10 +31,13 @@ const main = async () => {
             lname
           }
         }
-      }`
+      }`,
+    {
+      eventId: "64b48805546be3b88ef4272b",
+    }
   );
 
-  const { data } = await events.json();
+  const { data } = await event.json();
   console.log(data);
 };
 
