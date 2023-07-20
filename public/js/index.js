@@ -20,8 +20,8 @@ const queryGraphQL = async (query, variables) => {
 
 const main = async () => {
   const event = await queryGraphQL(
-    `query GetEvent($eventId: ID!) {
-        event(id: $eventId) {
+    `query GetEvents {
+        events {
           id
           title
           description
@@ -40,20 +40,34 @@ const main = async () => {
   const { data } = await event.json();
   console.log(data);
 
-  //For Event Page Only
-  if (document.getElementById("title")) {
-    const title = document.getElementById("title");
-    const id = document.getElementById("id");
-    const description = document.getElementById("description");
-    const usersList = document.querySelector("#users ul");
-    title.textContent = data.event.title;
-    id.textContent = "Event ID: " + data.event.id;
-    description.textContent = "Event Description: " + data.event.description;
-    let users = data.event.users;
-    for (user in users) {
-      const li = document.createElement("li");
-      li.textContent = users[user].fname + " " + users[user].lname;
-      usersList.appendChild(li);
+  if (document.getElementById("events")) {
+    for (i in data.events) {
+      const currevent = data.events[i];
+      const eventList = document.getElementById("events");
+      const div = document.createElement("div");
+      const title = document.createElement("h3");
+      const id = document.createElement("p");
+      const description = document.createElement("p");
+      const userLabel = document.createElement("p");
+      const userList = document.createElement("ul");
+      const users = currevent.users;
+
+      div.classList.add("eventContainer");
+      title.textContent = currevent.title;
+      id.textContent = "ID: " + currevent.id;
+      description.textContent = "Description: " + currevent.description;
+      userLabel.textContent = "Users:";
+      for (user in users) {
+        const li = document.createElement("li");
+        li.textContent = users[user].fname + " " + users[user].lname;
+        userList.appendChild(li);
+      }
+      div.appendChild(title);
+      div.appendChild(id);
+      div.appendChild(description);
+      div.appendChild(userLabel);
+      div.appendChild(userList);
+      eventList.appendChild(div);
     }
   }
 };
