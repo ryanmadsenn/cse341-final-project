@@ -16,3 +16,18 @@ label {
 h3 {
   font-size: 1.2rem;
 }
+
+#events{
+  padding: 0;
+}
+
+.eventContainer{
+  outline: 1px black solid;
+  border-radius: 5px;
+  margin: 2em 0;
+  padding: 5px 8px;
+}
+
+#events p {
+  margin-bottom: .25em;
+}
