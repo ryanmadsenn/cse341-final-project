@@ -21,7 +21,6 @@ const updateUI = async () => {
       await auth0Client.getTokenSilently();
 
     let userProfile = JSON.parse(JSON.stringify(await auth0Client.getUser()));
-    console.log(userProfile);
     for (key in userProfile) {
       const li = document.createElement("li");
       li.classList.add("list-group", "text-start");

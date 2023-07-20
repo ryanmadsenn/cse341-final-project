@@ -42,3 +42,7 @@ const main = async () => {
 };
 
 main();
+
+function events() {
+  window.location.href = "./events.html";
+}
