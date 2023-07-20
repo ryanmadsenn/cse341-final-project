@@ -16,7 +16,10 @@ const queryGraphQL = async (query, variables) => {
     redirect: "follow",
   };
 
-  return await fetch("http://localhost:8080/graphql", requestOptions);
+  return await fetch(
+    "https://cse-341-final-project-z6bj.onrender.com/graphql",
+    requestOptions
+  );
 };
 
 const main = async () => {
