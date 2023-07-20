@@ -61,17 +61,9 @@ const resetLocalStorage = () => {
 function checkstorage() {}
 
 window.onload = async () => {
-  console.log("function is running");
   await configureClient();
-  console.log("hi");
   updateUI();
-  const isAuthenticated = localStorage.getItem("token");
-  console.log(isAuthenticated);
-  if (!!isAuthenticated) {
-    // show the gated content
-    console.log("hi");
-    return;
-  }
+
   // NEW - check for the code and state parameters
   const query = window.location.search;
 
