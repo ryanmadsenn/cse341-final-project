@@ -18,10 +18,12 @@ const __dirname = path.dirname(__filename);
 
 const typeDefs = readFileSync("./schema.graphql", "utf-8");
 const db = await connectDB();
-// const verifyJWT = auth({
-//   audience: process.env.AUTH0_AUDIENCE as string,
-//   issuerBaseURL: process.env.AUTH0_DOMAIN as string,
-// });
+
+const verifyJWT = auth({
+  audience: process.env.AUTH0_AUDIENCE as string,
+  issuerBaseURL: process.env.AUTH0_DOMAIN as string,
+});
+
 export interface Context {
   dataSources: {
     db: Db;
@@ -56,11 +58,7 @@ app.use(
   json(),
   expressMiddleware(server, {
     context: async ({ req, res }) => {
-      // await verifyJWT(req, res, (err) => {
-      //   if (err) {
-      //     console.error(err);
-      //   }
-      // });
+      await verifyJWT(req, res, () => null);
 
       return {
         dataSources: {

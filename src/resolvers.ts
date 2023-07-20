@@ -6,12 +6,12 @@ import {
   User,
 } from "./__generated__/resolver-types.js";
 import { EventModel, UserModel, VendorModel, VenueModel } from "./db.js";
-import { Context } from "./server.js";
 import { ObjectId } from "mongodb";
 
 export const resolvers: Resolvers = {
   Query: {
-    events: async (_, __, { dataSources }) => {
+    events: async (_, __, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const events = await dataSources.db
         .collection("events")
         .aggregate([
@@ -73,7 +73,8 @@ export const resolvers: Resolvers = {
 
       return formattedEvents as Event[];
     },
-    event: async (_, args, { dataSources }) => {
+    event: async (_, args, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const { id } = args;
 
       const event = await dataSources.db
@@ -140,7 +141,8 @@ export const resolvers: Resolvers = {
 
       return formattedEvent as Event;
     },
-    vendors: async (_, __, { dataSources }) => {
+    vendors: async (_, __, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const vendors = await dataSources.db
         .collection("vendors")
         .aggregate([
@@ -170,7 +172,8 @@ export const resolvers: Resolvers = {
 
       return formattedVendors as Vendor[];
     },
-    vendor: async (_, args, { dataSources }) => {
+    vendor: async (_, args, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const { id } = args;
 
       const vendor = await dataSources.db
@@ -205,7 +208,8 @@ export const resolvers: Resolvers = {
 
       return formattedVendor as Vendor;
     },
-    venues: async (_, __, { dataSources }) => {
+    venues: async (_, __, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const venues = await dataSources.db
         .collection("venues")
         .aggregate([
@@ -235,7 +239,8 @@ export const resolvers: Resolvers = {
 
       return formattedVenues as Venue[];
     },
-    venue: async (_, args, { dataSources }) => {
+    venue: async (_, args, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const { id } = args;
 
       const venue = await dataSources.db
@@ -270,7 +275,8 @@ export const resolvers: Resolvers = {
 
       return formattedVenue as Venue;
     },
-    users: async (_, __, { dataSources }) => {
+    users: async (_, __, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const users = await dataSources.db
         .collection("users")
         .aggregate([
@@ -294,7 +300,8 @@ export const resolvers: Resolvers = {
 
       return formattedUsers as User[];
     },
-    user: async (_, args, { dataSources }) => {
+    user: async (_, args, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const { id } = args;
 
       const user = await dataSources.db
@@ -325,11 +332,12 @@ export const resolvers: Resolvers = {
     },
   },
   Mutation: {
-    createEvent: async (_, args, context: Context) => {
+    createEvent: async (_, args, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const { title, description, datetime, venue, vendors, users } = args;
 
       // Insert event into the database.
-      const { acknowledged, insertedId } = await context.dataSources.db
+      const { acknowledged, insertedId } = await dataSources.db
         .collection("events")
         .insertOne({
           title,
@@ -345,7 +353,7 @@ export const resolvers: Resolvers = {
       }
 
       if (venue) {
-        const { acknowledged: venueAcknowledged } = await context.dataSources.db
+        const { acknowledged: venueAcknowledged } = await dataSources.db
           .collection("venues")
           .updateOne(
             { _id: new ObjectId(venue) },
@@ -373,8 +381,9 @@ export const resolvers: Resolvers = {
         };
 
         // Update vendors to include event.
-        const { acknowledged: vendorAcknowledged } =
-          await context.dataSources.db.collection("vendors").updateMany(
+        const { acknowledged: vendorAcknowledged } = await dataSources.db
+          .collection("vendors")
+          .updateMany(
             {
               _id: {
                 $in: vendors?.map((vendorId) => new ObjectId(vendorId ?? "")),
@@ -398,7 +407,7 @@ export const resolvers: Resolvers = {
         };
 
         // Update users to include event.
-        const { acknowledged: userAcknowledged } = await context.dataSources.db
+        const { acknowledged: userAcknowledged } = await dataSources.db
           .collection("users")
           .updateMany(
             {
@@ -419,7 +428,8 @@ export const resolvers: Resolvers = {
         insertedId: String(insertedId),
       };
     },
-    updateEvent: async (_, args, { dataSources }) => {
+    updateEvent: async (_, args, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const { id, title, description, datetime, venue, vendors, users } = args;
 
       const eventToUpdate = await dataSources.db
@@ -540,7 +550,8 @@ export const resolvers: Resolvers = {
         acknowledged,
       };
     },
-    deleteEvent: async (_, args, { dataSources }) => {
+    deleteEvent: async (_, args, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const { id } = args;
 
       const { acknowledged } = await dataSources.db
@@ -600,7 +611,8 @@ export const resolvers: Resolvers = {
         acknowledged,
       };
     },
-    createVendor: async (_, args, { dataSources }) => {
+    createVendor: async (_, args, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const {
         name,
         description,
@@ -667,7 +679,8 @@ export const resolvers: Resolvers = {
         insertedId: String(insertedId),
       };
     },
-    updateVendor: async (_, args, { dataSources }) => {
+    updateVendor: async (_, args, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const {
         id,
         name,
@@ -748,10 +761,11 @@ export const resolvers: Resolvers = {
         acknowledged,
       };
     },
-    deleteVendor: async (_, args, context: Context) => {
+    deleteVendor: async (_, args, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const { id } = args;
 
-      const { acknowledged } = await context.dataSources.db
+      const { acknowledged } = await dataSources.db
         .collection<Vendor>("vendors")
         .deleteOne({ _id: new ObjectId(id) });
 
@@ -766,7 +780,7 @@ export const resolvers: Resolvers = {
       };
 
       // Delete vendor id from events.
-      const { acknowledged: eventAcknowledged } = await context.dataSources.db
+      const { acknowledged: eventAcknowledged } = await dataSources.db
         .collection("events")
         .updateMany({ vendors: new ObjectId(id) }, eventDelete);
 
@@ -778,7 +792,8 @@ export const resolvers: Resolvers = {
         acknowledged,
       };
     },
-    createVenue: async (_, args, { dataSources }) => {
+    createVenue: async (_, args, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const {
         name,
         description,
@@ -845,7 +860,8 @@ export const resolvers: Resolvers = {
         insertedId: String(insertedId),
       };
     },
-    updateVenue: async (_, args, { dataSources }) => {
+    updateVenue: async (_, args, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const {
         id,
         name,
@@ -926,7 +942,8 @@ export const resolvers: Resolvers = {
         acknowledged,
       };
     },
-    deleteVenue: async (_, args, { dataSources }) => {
+    deleteVenue: async (_, args, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const { id } = args;
 
       const { acknowledged } = await dataSources.db
@@ -956,7 +973,8 @@ export const resolvers: Resolvers = {
         acknowledged,
       };
     },
-    createUser: async (_, args, { dataSources }) => {
+    createUser: async (_, args, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const { events } = args;
 
       const { acknowledged, insertedId } = await dataSources.db
@@ -971,7 +989,8 @@ export const resolvers: Resolvers = {
         insertedId: String(insertedId),
       };
     },
-    updateUser: async (_, args, { dataSources }) => {
+    updateUser: async (_, args, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const { id, role, fname, lname, phone, email, password, events } = args;
 
       const userToUpdate = await dataSources.db
@@ -1035,7 +1054,8 @@ export const resolvers: Resolvers = {
         acknowledged,
       };
     },
-    deleteUser: async (_, args, { dataSources }) => {
+    deleteUser: async (_, args, { dataSources, isAuthenticated }) => {
+      if (!isAuthenticated) throw new Error("Not authenticated");
       const { id } = args;
 
       const { acknowledged } = await dataSources.db
