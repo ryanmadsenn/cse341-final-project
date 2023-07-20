@@ -39,10 +39,31 @@ const main = async () => {
 
   const { data } = await event.json();
   console.log(data);
-};
 
-main();
+  //For Event Page Only
+  if (document.getElementById("title")) {
+    const title = document.getElementById("title");
+    const id = document.getElementById("id");
+    const description = document.getElementById("description");
+    const usersList = document.querySelector("#users ul");
+    title.textContent = data.event.title;
+    id.textContent = "Event ID: " + data.event.id;
+    description.textContent = "Event Description: " + data.event.description;
+    let users = data.event.users;
+    for (user in users) {
+      const li = document.createElement("li");
+      li.textContent = users[user].fname + " " + users[user].lname;
+      usersList.appendChild(li);
+    }
+  }
+};
 
 function events() {
   window.location.href = "./events.html";
 }
+
+function profile() {
+  window.location.href = "./index.html";
+}
+
+main();

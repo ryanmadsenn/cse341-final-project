@@ -17,13 +17,12 @@ const updateUI = async () => {
   if (isAuthenticated) {
     document.getElementById("gated-content").classList.remove("hidden");
 
-    document.getElementById("ipt-access-token").innerHTML =
-      await auth0Client.getTokenSilently();
+    localStorage.setItem("token", await auth0Client.getTokenSilently());
 
     let userProfile = JSON.parse(JSON.stringify(await auth0Client.getUser()));
     for (key in userProfile) {
       const li = document.createElement("li");
-      li.classList.add("list-group", "text-start");
+      li.classList.add("text-start");
       li.textContent = key + ": " + userProfile[key];
       document.getElementById("ipt-user-profile").appendChild(li);
     }
@@ -59,12 +58,18 @@ const resetLocalStorage = () => {
   location.reload();
 };
 
+function checkstorage() {}
+
 window.onload = async () => {
+  console.log("function is running");
   await configureClient();
+  console.log("hi");
   updateUI();
-  const isAuthenticated = await auth0Client.isAuthenticated();
-  if (isAuthenticated) {
+  const isAuthenticated = localStorage.getItem("token");
+  console.log(isAuthenticated);
+  if (!!isAuthenticated) {
     // show the gated content
+    console.log("hi");
     return;
   }
   // NEW - check for the code and state parameters
